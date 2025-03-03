@@ -1,0 +1,112 @@
+.footer {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 3rem 0 0 0;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2.5rem;
+}
+
+.footer-section h3 {
+    font-size: 1.125rem;
+    margin-bottom: 1.25rem;
+    font-weight: 600;
+    position: relative;
+}
+
+.footer-section p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+}
+
+/* Social icons */
+.social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+
+.social-icon {
+    color: white;
+    font-size: 1.125rem;
+    transition: color 0.3s ease;
+}
+
+.social-icon:hover {
+    color: #a0b9e6;
+}
+
+/* Links section */
+.links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.links ul li {
+    margin-bottom: 0.625rem;
+}
+
+.links ul li a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 0.875rem;
+}
+
+.links ul li a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* Address section */
+.map-container {
+    height: 180px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.map-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Footer bottom */
+.footer-bottom {
+    text-align: center;
+    padding: 1.25rem 0;
+    margin-top: 2.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.875rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .footer {
+        padding: 2.5rem 0 0 0;
+    }
+
+    .footer-content {
+        gap: 2rem;
+    }
+
+    .footer-section {
+        text-align: center;
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
