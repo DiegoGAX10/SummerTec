@@ -1,6 +1,7 @@
 import { MoreVertical } from "lucide-react";
 import { createContext, useContext, useState } from "react";
 import "./../../../index.css"
+import { Link } from 'react-router-dom';
 const SidebarContext = createContext();
 
 export default function Sidebar({ children }) {
@@ -14,6 +15,8 @@ export default function Sidebar({ children }) {
     // Function to handle item click
     const handleItemClick = (text) => {
         setActiveItem(text);
+
+
     };
 
     return (
@@ -61,7 +64,7 @@ export default function Sidebar({ children }) {
     );
 }
 
-export function SideBarItem({ icon, text, alert }) {
+export function SideBarItem({ icon, text, alert, link  }) {
     const { expanded, activeItem, handleItemClick } = useContext(SidebarContext);
     const isActive = activeItem === text;
 
@@ -73,6 +76,7 @@ export function SideBarItem({ icon, text, alert }) {
                     : "hover:bg-indigo-50 text-gray-600 "
             }`}
             onClick={() => handleItemClick(text)}
+
         >
             {icon}
             <span className={`overflow-hidden transition-all ${expanded ? "w-50 ml-3 " : "w-0"}`}>
