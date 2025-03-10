@@ -3,6 +3,8 @@ import React from 'react';
 import Sidebar from './components/Sidebar.jsx';
 import { SideBarItem } from './components/Sidebar.jsx';
 import { User, CirclePlus, Bell, Settings, LogOut } from 'lucide-react';
+import "./styles.css" ;
+
 
 export default function Inicio() {
 

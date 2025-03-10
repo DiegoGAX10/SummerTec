@@ -1,7 +1,7 @@
 import { MoreVertical } from "lucide-react";
 import { createContext, useContext, useState } from "react";
 import "./../../../index.css"
-import { Link } from 'react-router-dom';
+
 const SidebarContext = createContext();
 
 export default function Sidebar({ children }) {
