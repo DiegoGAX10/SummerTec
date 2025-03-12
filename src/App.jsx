@@ -1,21 +1,21 @@
 import React from 'react';
-import Header from './components/Header';
-import Hero from './components/Hero';
-import Features from './components/Features';
-import Footer from './components/Footer';
+import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom";
+import Landing from './components/Landing.jsx';
+import Login from "./auth/Login.jsx";
+import Register from "./auth/Register.jsx";
 import './App.css';
-
+import Inicio from "./students/inicio/Inicio.jsx";
 function App() {
     return (
-        <div className="app">
-            <Header />
-            <main>
-                <Hero />
-                <Features />
-                {/* Se pueden agregar más secciones aquí */}
-            </main>
-            <Footer />
-        </div>
+        <Router>
+            <Routes>
+                <Route path="/" element={<Navigate to="/landing" />} />
+                <Route path="/landing" element={<Landing />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/home" element={<Inicio />} />
+            </Routes>
+        </Router>
     );
 }
 

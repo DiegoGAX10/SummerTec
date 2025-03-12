@@ -1,0 +1,108 @@
+{
+
+
+    "cursos": [
+
+
+        {
+            "nombre": "TALLER DE BASE DE DATOS",
+            "aula": "2-01",
+            "horas_semanales": 6,
+            "creditos": 6,
+            "horario": "Matutino",
+            "profesor": "María López Ramírez",
+            "cupo": "20/30",
+            "estado": "En proceso"
+        },
+        {
+            "nombre": "INGENIERÍA DE SOFTWARE",
+            "aula": "3-08",
+            "horas_semanales": 5,
+            "creditos": 5,
+            "horario": "Vespertino",
+            "profesor": "Carlos Méndez Juárez",
+            "cupo": "28/32",
+            "estado": "Grupo asignado"
+        },
+        {
+            "nombre": "FUNDAMENTOS DE TELECOMUNICACIONES",
+            "aula": "2-9",
+            "horas_semanales": 4,
+            "creditos": 4,
+            "horario": "Matutino",
+            "profesor": "Ana Torres García",
+            "cupo": "15/25",
+            "estado": "Sin respuesta"
+        },
+        {
+            "nombre": "LENGUAJES DE INTERFAZ",
+            "aula": "3-08",
+            "horas_semanales": 6,
+            "creditos": 6,
+            "horario": "Vespertino",
+            "profesor": "Roberto Sánchez Pérez",
+            "cupo": "18/28",
+            "estado": "Grupo asignado"
+        },
+        {
+            "nombre": "INVEST. DE OPERACIONES",
+            "aula": "2-01",
+            "horas_semanales": 5,
+            "creditos": 5,
+            "horario": "Matutino",
+            "profesor": "Laura Mendoza Ruiz",
+            "cupo": "22/30",
+            "estado": "En proceso"
+        },
+        {
+            "nombre": "CULTURA EMPRESARIAL",
+            "aula": "2-9",
+            "horas_semanales": 4,
+            "creditos": 4,
+            "horario": "Vespertino",
+            "profesor": "Eduardo Hernández León",
+            "cupo": "12/20",
+            "estado": "Sin respuesta"
+        },
+        {
+            "nombre": "MÉTODOS NUMÉRICOS",
+            "aula": "3-08",
+            "horas_semanales": 6,
+            "creditos": 6,
+            "horario": "Matutino",
+            "profesor": "Gabriela Ortega Díaz",
+            "cupo": "25/30",
+            "estado": "Grupo asignado"
+        },
+        {
+            "nombre": "REDES DE COMPUTADORAS",
+            "aula": "2-01",
+            "horas_semanales": 5,
+            "creditos": 5,
+            "horario": "Vespertino",
+            "profesor": "Fernando Ramírez Silva",
+            "cupo": "20/28",
+            "estado": "En proceso"
+        },
+        {
+            "nombre": "PROGRAMACIÓN WEB",
+            "aula": "2-9",
+            "horas_semanales": 6,
+            "creditos": 6,
+            "horario": "Matutino",
+            "profesor": "Patricia Gómez Torres",
+            "cupo": "30/32",
+            "estado": "Grupo asignado"
+        },
+        {
+            "nombre": "FUNDAMENTOS DE CIENCIA DE DATOS",
+            "aula": "3-08",
+            "horas_semanales": 4,
+            "creditos": 4,
+            "horario": "Vespertino",
+            "profesor": "Hugo Jiménez Ríos",
+            "cupo": "14/25",
+            "estado": "Sin respuesta"
+        }
+    ]
+}

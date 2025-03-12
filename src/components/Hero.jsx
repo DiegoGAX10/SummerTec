@@ -17,7 +17,9 @@ const Hero = () => {
                             administración y validación de grupos de verano en el
                             Tecnológico de Zacatepec
                         </p>
-                        <button className="cta-button">Comienza ahora</button>
+                        <button className="cta-button">
+                            <a href="/register">Comienza ahora</a>
+                            </button>
                     </div>
                 </div>
             </div>
