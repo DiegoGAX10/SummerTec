@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert } from 'react';
 
 const Register = ({ navigation }) => {
     const [numero_control, setNumeroControl] = useState('');
