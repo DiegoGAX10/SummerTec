@@ -51,11 +51,6 @@ const Header = () => {
                         </div>
                     </form>
 
-                    {/* Botones de autenticación */}
-                    <div className="auth-buttons">
-                        <button className="sign-in-button">Inicia sesión</button>
-                        <button className="sign-up-button">Regístrate</button>
-                    </div>
                 </div>
             </div>
         </header>

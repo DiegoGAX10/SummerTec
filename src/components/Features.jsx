@@ -24,7 +24,7 @@ const Features = () => {
                         <p>Explora los cursos de verano disponibles y regístrate en el que más te interese de manera rápida y sencilla.</p>
                     </div>
 
-                    <div className="feature-card highlighted">
+                    <div className="feature-card ">
                         <div className="feature-icon">
                             <FaCalendarAlt />
                         </div>
