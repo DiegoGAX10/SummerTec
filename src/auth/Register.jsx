@@ -16,27 +16,31 @@ const Register = ({ navigation }) => {
         } else if (password.length < 6) {
             Alert.alert('', 'La contraseña debe tener al menos 6 caracteres');
         } else {
-            const registrationData = new FormData();
-            registrationData.append('numero_control', numero_control);
-            registrationData.append('nombre_completo', nombre_completo);
-            registrationData.append('email', email);
-            registrationData.append('password', password);
-            registrationData.append('phone_number', phone_number);
+            const registrationData = {
+                numero_control,
+                nombre_completo,
+                email,
+                password,
+                phone_number
+            };
 
             try {
-                const response = await fetch('https://', {
+                console.log('Sending registration data:', registrationData);
+                const response = await fetch('http://127.0.0.1:5000/auth/signup', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'multipart/form-data'
+                        'Content-Type': 'application/json'
                     },
-                    body: registrationData,
+                    body: JSON.stringify(registrationData),
                 });
 
-                if (response.status === 201) {
+                console.log('Response status:', response.status);
+                if (response.ok) {
                     Alert.alert('Registro exitoso', 'Tu cuenta ha sido creada correctamente');
                     navigation.navigate('Login');
                 } else {
                     const errorData = await response.json();
+                    console.log('Error data:', errorData);
                     Alert.alert('Error en el registro', errorData.message || 'Hubo un problema con tu registro');
                 }
             } catch (error) {
