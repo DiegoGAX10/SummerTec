@@ -8,5 +8,4 @@ services:
       - /app/node_modules
     environment:
       - VITE_HOST=0.0.0.0
-    extra_hosts:
-      - "summertec.com:192.168.0.107"
+  

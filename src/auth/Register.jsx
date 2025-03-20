@@ -8,7 +8,7 @@ const Register = ({ navigation }) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [phone_number, setPhoneNumber] = useState('');
-
+    
     const handleSignUp = async (event) => {
         event.preventDefault();
         if (password !== confirmPassword) {
@@ -26,7 +26,7 @@ const Register = ({ navigation }) => {
 
             try {
                 console.log('Sending registration data:', registrationData);
-                const response = await fetch('http://127.0.0.1:5000/auth/signup', {
+                const response = await fetch('https://summer-tec-backend.onrender.com/auth/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -48,6 +48,15 @@ const Register = ({ navigation }) => {
                 Alert.alert('Error', 'Error en la conexión al servidor');
             }
         }
+
+    };
+    const generateEmail = (numero_control) =>{
+        return 'L' + numero_control + '@zacatepec.tecnm.mx';
+    };
+
+    const handleNumeroControl = (value) =>{
+        setNumeroControl(value);
+        setEmail(generateEmail(value));
     };
 
     return (
@@ -67,7 +76,7 @@ const Register = ({ navigation }) => {
                                 </label>
                                 <input type="text" name="controlNumber" id="controlNumber"
                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                       value={numero_control} onChange={(e) => setNumeroControl(e.target.value)} required
+                                       value={numero_control} onChange={(e) => handleNumeroControl(e.target.value)} required
                                        pattern="\d*" inputMode="numeric"
                                 />
                             </div>
@@ -79,15 +88,6 @@ const Register = ({ navigation }) => {
                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                        value={nombre_completo} onChange={(e) => setNombreCompleto(e.target.value)} required
                                        pattern="^[A-Za-zÀ-ÿ\s]+$" title="Solo letras y espacios"
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    Correo electrónico
-                                </label>
-                                <input type="email" name="email" id="email"
-                                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                       value={email} onChange={(e) => setEmail(e.target.value)} required
                                 />
                             </div>
                             <div>
