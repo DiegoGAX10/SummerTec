@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import Swal from "sweetalert2";
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 
-const Register = ({ navigation }) => {
+const Register = () => {
     const [numero_control, setNumeroControl] = useState('');
     const [nombre_completo, setNombreCompleto] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [phone_number, setPhoneNumber] = useState('');
-
+    const navigate = useNavigate();
     const handleSignUp = async (event) => {
         event.preventDefault();
         if (password !== confirmPassword) {
@@ -48,7 +49,7 @@ const Register = ({ navigation }) => {
                         text: "Registro exitoso, tu cuenta ha sido creada correctamente",
                         icon: "success",
                     });
-                    navigation.navigate('Login');
+                    navigate('/login');
                 } else {
                     const errorData = await response.json();
                     console.log('Error data:', errorData);
