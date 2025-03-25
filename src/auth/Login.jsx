@@ -17,7 +17,7 @@ const Login = () => {
         event.preventDefault();
         try {
             const email = generateEmail(controlNumber);
-            const response = await axios.post('https://summer-tec-backend.onrender.com/auth/signup', {
+            const response = await axios.post('https://summer-tec-backend.onrender.com/auth/login', {
                 email: email,
                 password: password,
             });
