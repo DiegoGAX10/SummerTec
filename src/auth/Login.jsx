@@ -30,7 +30,7 @@ const Login = () => {
                     text: "Inicio de sesión exitoso",
                     icon: "success",
                 });
-                navigate('/main');
+                navigate('/inicio');
             } else {
                 Swal.fire({
                     title: "Error",
