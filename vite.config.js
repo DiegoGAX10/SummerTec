@@ -1,17 +1,21 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react()],
   server: {
-    host: '0.0.0.0',  // Permite conexiones externas
-    port: 5173,       // Puerto estándar de Vite
+    host: '0.0.0.0',
+    port: 5173,
     watch: {
-      usePolling: true  // Ayuda con la detección de cambios en Docker
+      usePolling: true
     },
-    strictPort: true,   // Evita que Vite cambie el puerto automáticamente
-    allowedHosts: ['summertec.onrender.com'] // Agrega el host permitido en Render
+    strictPort: true,
+    hmr: {
+      clientPort: 443, // Use 443 for HTTPS connections
+      timeout: 120000, // Increase timeout to 2 minutes
+    },
+    cors: true, // Enable CORS for all origins
+    allowedHosts: ['summertec.onrender.com']
   }
 })
