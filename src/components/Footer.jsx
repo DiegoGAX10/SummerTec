@@ -1,7 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FaFacebook, FaInstagram } from 'react-icons/fa';
+import { FaX } from 'react-icons/fa6';
 import './Footer.css';
-import {FaX} from "react-icons/fa6";
 
 const Footer = () => {
     return (
@@ -21,10 +22,12 @@ const Footer = () => {
                                rel="noopener noreferrer">
                                 <FaFacebook/>
                             </a>
-                            <a href="https://www.x.com" className="social-icon">
+                            <a href="https://www.x.com" className="social-icon" target="_blank"
+                               rel="noopener noreferrer">
                                 <FaX/>
                             </a>
-                            <a href="https://www.instagram.com" className="social-icon">
+                            <a href="https://www.instagram.com" className="social-icon" target="_blank"
+                               rel="noopener noreferrer">
                                 <FaInstagram/>
                             </a>
                         </div>
@@ -33,15 +36,15 @@ const Footer = () => {
                     <div className="footer-section links">
                         <h3>Useful Links</h3>
                         <ul>
-                            <li><a href="#">Sobre nosotros</a></li>
-                            <li><a href="#">Politica de Privacidad</a></li>
-                            <li><a href="#">Nuestra Mision</a></li>
-                            <li><a href="#">Nuestro Equipo</a></li>
+                            <li><Link to="/sobre-nosotros">Sobre nosotros</Link></li>
+                            <li><Link to="/politica-de-privacidad">Política de Privacidad</Link></li>
+                            <li><Link to="/nuestra-mision">Nuestra Misión</Link></li>
+                            <li><Link to="/nuestro-equipo">Nuestro Equipo</Link></li>
                         </ul>
                     </div>
 
                     <div className="footer-section address">
-                        <h3>Ubicacion</h3>
+                        <h3>Ubicación</h3>
                         <div className="map-container">
                             <iframe
                                 title="Google Map Location"
@@ -59,7 +62,7 @@ const Footer = () => {
                 </div>
 
                 <div className="footer-bottom">
-                    <p>&copy;2024 All Right Reserved</p>
+                    <p>&copy;2025 All Right Reserved</p>
                 </div>
             </div>
         </footer>
