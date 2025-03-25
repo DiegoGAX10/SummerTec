@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Login = () => {
     const [controlNumber, setControlNumber] = useState('');
@@ -10,6 +11,7 @@ const Login = () => {
     const generateEmail = (controlNumber) => {
         return `L${controlNumber}@zacatepec.tecnm.mx`;
     };
+
 
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -23,17 +25,41 @@ const Login = () => {
             if (response.status === 200) {
                 const { localId } = response.data;
                 localStorage.setItem('userUID', localId);
-                window.alert('Inicio de sesión exitoso');
+                Swal.fire({
+                    title: "Success",
+                    text: "Inicio de sesión exitoso",
+                    icon: "success",
+                });
                 navigate('/main');
             } else {
-                window.alert('Error de autenticación. Intenta de nuevo.');
+                Swal.fire({
+                    title: "Error",
+                    text: "Error de autenticación. Intenta de nuevo.",
+                    icon: "error",
+                });
             }
         } catch (error) {
             console.error('Error en el inicio de sesión:', error);
-            if (error.response && error.response.status === 401) {
-                window.alert('Número de control o contraseña incorrectos');
+            if (error.response) {
+                if (error.response.status === 401) {
+                    Swal.fire({
+                        title: "Oh no!",
+                        text: "Número de control o contraseña incorrectos",
+                        icon: "error",
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: `Error en el servidor: ${error.response.status}`,
+                        icon: "error",
+                    });
+                }
             } else {
-                window.alert('Ocurrió un error en el servidor');
+                Swal.fire({
+                    title: "Error",
+                    text: "Ocurrió un error en el servidor",
+                    icon: "error",
+                });
             }
         }
     };
