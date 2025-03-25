@@ -17,7 +17,7 @@ const Login = () => {
         event.preventDefault();
         try {
             const email = generateEmail(controlNumber);
-            const response = await axios.post('http://localhost:5000/auth/signup', {
+            const response = await axios.post('http://localhost:5000/auth/login', {
                 email: email,
                 password: password,
             });
