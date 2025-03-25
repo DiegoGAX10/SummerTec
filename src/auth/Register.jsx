@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Swal from "sweetalert2";
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
-
+import { useNavigate } from 'react-router-dom';
 const Register = () => {
     const [numero_control, setNumeroControl] = useState('');
     const [nombre_completo, setNombreCompleto] = useState('');
