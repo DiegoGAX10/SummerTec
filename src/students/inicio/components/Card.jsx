@@ -21,7 +21,7 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
 
     return (
         <div className="p-4 max-w-sm">
-            <div className="flex rounded-lg h-full gap-2 p-6 flex-col shadow-md">
+            <div className="flex rounded-lg h-full gap-2 p-6 flex-col shadow-md" style={{ width: '320px' }}>
                 <div className="flex items-center mb-3">
                     <div className="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-[var(--primary-color)] text-white flex-shrink-0">
                         <GraduationCap className="w-5 h-5" />
