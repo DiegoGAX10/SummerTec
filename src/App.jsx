@@ -4,7 +4,8 @@ import Landing from './components/Landing.jsx';
 import Login from "./auth/Login.jsx";
 import Register from "./auth/Register.jsx";
 import './App.css';
-import Inicio from "./students/inicio/Inicio.jsx";
+import Students from "./students/Students.jsx";
+
 function App() {
     return (
         <Router>
@@ -13,7 +14,7 @@ function App() {
                 <Route path="/landing" element={<Landing />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/home" element={<Inicio />} />
+                <Route path="/students/*" element={<Students />} />
             </Routes>
         </Router>
     );
