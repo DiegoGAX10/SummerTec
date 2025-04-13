@@ -4,11 +4,7 @@ import InicioAdmins from './inicio-admins/InicioAdmins.jsx';
 import {MdGroups, MdAddBox, MdNotifications, MdSettings, MdLogout} from "react-icons/md";
 import {FiChevronLeft, FiChevronRight} from 'react-icons/fi';
 import {IoHome} from "react-icons/io5";
-import MisGrupos from "../students/misGrupos/MisGrupos.jsx";
-import SolicitarGrupo from "../students/solicitarGrupo/SolicitarGrupo.jsx";
-import Notificaciones from "../students/notificaciones/Notificaciones.jsx";
-import Ajustes from "../students/ajustes/Ajustes.jsx";
-
+import MisGrupos from './mis-grupos/MisGrupos.jsx';
 export default function Students() {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -26,7 +22,7 @@ export default function Students() {
         {
             label: 'Mis grupos',
             icon: <MdGroups size={24}/>,
-            path: '',
+            path: '/admins/mis-grupos',
             color: 'text-[var(--primary-color)]'
         },
         {
@@ -102,11 +98,19 @@ export default function Students() {
                 </div>
             </div>
 
+
+
             {/* Main Content */}
-            <Routes>
-                <Route path="inicio" element={<InicioAdmins />} />
-                <Route path="*" element={<Navigate to="inicio" replace />} />
-            </Routes>
+            <div className={`flex-1 transition-all duration-300 p-8 ${isOpen ? 'ml-64' : 'ml-20'}`}>
+                <Routes>
+
+                    <Route path="/inicio" element={<InicioAdmins/>}/>
+                    <Route path="*" element={<Navigate to="inicio" replace/>}/>
+                      <Route path="mis-grupos" element={<MisGrupos />} />
+
+                </Routes>
+            </div>
+
         </div>
     );
 }

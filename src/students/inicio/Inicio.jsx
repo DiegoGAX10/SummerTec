@@ -6,7 +6,6 @@ function Inicio() {
     return (
         <div>
 
-
             {/* Modal */}
             <dialog id="my_modal_1" className="modal">
                 <div className="modal-box bg-white rounded-lg shadow-lg p-6 w-full max-w-md mx-auto">
