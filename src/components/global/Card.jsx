@@ -8,8 +8,8 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
 
     // Define the color mapping
     const estadoColors = {
-        "En proceso": "bg-yellow-500 ",
-        "Grupo asignado": "bg-green-500 ",
+        "PENDIENTE": "bg-yellow-500 ",
+        "APROBADO": "bg-green-500 ",
         "Sin respuesta": "bg-red-500 ",
     };
 
