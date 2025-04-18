@@ -115,8 +115,6 @@ export default function SolicitarGrupo() {
     }, [carrera]);
 
 
-
-
     return (<div className="flex items-center justify-center p-4">
         <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
             <h2 className="text-lg font-semibold">Solicitar Grupo</h2>
@@ -143,8 +141,6 @@ export default function SolicitarGrupo() {
                         setClaveMateria('');
 
 
-
-
                     }}
 
                 >
@@ -161,7 +157,7 @@ export default function SolicitarGrupo() {
                     required
                     onChange={(e) => {
 
-                         var selectedMateria = materiasClave.find((m) => m.nombre_materia === e.target.value);
+                        var selectedMateria = materiasClave.find((m) => m.nombre_materia === e.target.value);
                         console.log("Selected Materia:", selectedMateria); // Log the selected materia
                         setMatSelec(selectedMateria);
 
@@ -179,21 +175,23 @@ export default function SolicitarGrupo() {
                     </option>))}
                 </select>
 
-                <p className="mt-2 text-sm text-gray-600">
-                    <strong>Grupo:</strong> Sin Asignar
-                </p>
-                <p className="text-sm text-gray-600">
-                    <strong>Créditos:</strong> {creditos}
-                </p>
-                <p className="text-sm text-gray-600">
-                    <strong>Aula:</strong> Sin Asignar
-                </p>
-                <p className="text-sm text-gray-600">
-                    <strong>Hrs/Semana:</strong> {hrsSemana}
-                </p>
-                <p className="text-sm text-gray-600">
-                    <strong>Clave:</strong> {claveMateria}
-                </p>
+                {matSelec&&(<div>
+                    <p className="mt-2 text-sm text-gray-600">
+                        <strong>Grupo:</strong> Sin Asignar
+                    </p>
+                    <p className="text-sm text-gray-600">
+                        <strong>Créditos:</strong> {creditos}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                        <strong>Aula:</strong> Sin Asignar
+                    </p>
+                    <p className="text-sm text-gray-600">
+                        <strong>Hrs/Semana:</strong> {hrsSemana}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                        <strong>Clave:</strong> {claveMateria}
+                    </p>
+                </div>)}
 
                 <label className="block mt-4">Elige un turno:</label>
                 <select
