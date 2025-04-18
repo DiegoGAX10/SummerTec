@@ -17,6 +17,7 @@ const MateriasGrid = ({materias}) => {
                     horario={curso.turno || "MISSING VALUE"} // Assuming 'horario' is not part of the data structure
                     profesor={curso.profesor || "MISSING VALUE"} // Correct field
                     cupo={curso.cupo || "MISSING VALUE"} // Correct field
+                    id_materia={curso.id_materia}
                 />
             ))}
         </div>

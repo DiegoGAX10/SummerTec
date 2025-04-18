@@ -1,10 +1,50 @@
-import { GraduationCap } from 'lucide-react';
-import { useState } from 'react';
+import {GraduationCap} from 'lucide-react';
+import {useState} from 'react';
+import {FiEdit, FiTrash} from 'react-icons/fi';
+import Swal from "sweetalert2";
 
 
+function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo, estado, id_materia}) {
 
-function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo, estado }) {
+    const token = localStorage.getItem('authToken');
+
     const [isModalOpen, setIsModalOpen] = useState(false);  // State for controlling modal visibility
+
+
+    const handleDelete = async (id_materia) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:5000/materias_propuestas/delete_materias_propuestas/${id_materia}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                Swal.fire({
+                    text: "La materia fue eliminada correctamente",
+                    icon: "success",
+                }).then(() => {
+                    setIsModalOpen(false);
+                    window.location.reload(); // Recarga la página una vez que el usuario cierra el alert
+                });
+            } else {
+                const error = await response.json();
+                Swal.fire({
+                    text: error.message || "Error al eliminar la materia",
+                    icon: "error",
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: "Error",
+                text: `${error}`,
+                icon: "error",
+            });
+        }
+    };
+
 
     // Define the color mapping
     const estadoColors = {
@@ -21,10 +61,11 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
 
     return (
         <div className="p-4 max-w-sm">
-            <div className="flex rounded-lg h-full gap-2 p-6 flex-col shadow-md" style={{ width: '320px' }}>
+            <div className="flex rounded-lg h-full gap-2 p-6 flex-col shadow-md" style={{width: '320px'}}>
                 <div className="flex items-center mb-3">
-                    <div className="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-[var(--primary-color)] text-white flex-shrink-0">
-                        <GraduationCap className="w-5 h-5" />
+                    <div
+                        className="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-[var(--primary-color)] text-white flex-shrink-0">
+                        <GraduationCap className="w-5 h-5"/>
                     </div>
                     <h2 className="text-black text-xl font-semibold">{nombre}</h2>
                 </div>
@@ -63,8 +104,9 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
                     <div className="bg-white rounded-lg p-6 w-full max-w-lg">
                         <div className="flex justify-between items-center mb-4">
                             <div className="flex items-center mb-3">
-                                <div className="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-[var(--primary-color)] text-white flex-shrink-0">
-                                    <GraduationCap className="w-5 h-5" />
+                                <div
+                                    className="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-[var(--primary-color)] text-white flex-shrink-0">
+                                    <GraduationCap className="w-5 h-5"/>
                                 </div>
                                 <h2 className="text-[var(--primary-color)] text-xl font-semibold">{nombre}</h2>
                             </div>
@@ -96,7 +138,9 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
                             </p>
                             <p className="text-gray-500 text-lg">
                                 <span className="font-semibold">Cupo:</span> {cupo}
-                            </p>
+                            </p>    <p className="text-gray-500 text-lg">
+                            <span className="font-semibold">id_materia:</span> {id_materia}
+                        </p>
 
 
                             <div className="flex flex-col gap-3 flex-grow">
@@ -109,12 +153,22 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
                                 </div>
 
                                 {/* Learn More Button */}
-                                <div className="flex justify-center">
+                                <div className="flex justify-center gap-2">
                                     <button
-
-                                        className="text-center text-white bg-[var(--primary-color)] hover:bg-blue-950  font-medium rounded-lg text-sm px-4 py-2.5  cursor-pointer"
+                                        className="flex items-center gap-2 text-white bg-yellow-500 hover:bg-yellow-600 font-medium rounded-lg text-sm px-4 py-2.5 cursor-pointer"
                                     >
-                                        Unirme
+                                        <FiEdit/>
+                                        Editar
+                                    </button>
+
+
+                                    <button
+                                        className="flex items-center gap-2 text-white bg-red-800 hover:bg-red-900 font-medium rounded-lg text-sm px-4 py-2.5 cursor-pointer"
+                                        onClick={() => handleDelete(id_materia)}
+                                    >
+                                        <FiTrash/>
+
+                                        Borrar
                                     </button>
 
 

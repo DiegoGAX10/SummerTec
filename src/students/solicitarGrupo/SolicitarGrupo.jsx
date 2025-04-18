@@ -6,13 +6,20 @@ const materias = materiasJson.materias; // Access the materias array from the JS
 import Constants from "../../utils/constants/Constants.jsx";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { SlChemistry } from "react-icons/sl";
+import {SlChemistry} from "react-icons/sl";
 import Dropdown from "../../components/global/Dropdown.jsx";
+import { useNavigate } from 'react-router-dom';
 
 
 export default function SolicitarGrupo() {
     const token = localStorage.getItem('authToken');
     const userType = localStorage.getItem('userType');
+    const userEmail = localStorage.getItem('userEmail');
+
+
+    const navigate = useNavigate();
+
+
 //const [claveCarrera, setClaveCarrera] = useState(false);
     const [materiasClave, setMateriasClave] = useState([]);
 
@@ -26,10 +33,8 @@ export default function SolicitarGrupo() {
                     }
                 });
 
-            //console.log(JSON.stringify(response.data, null, 2));
-
             setMateriasClave(response.data);
-            //console.log(JSON.stringify(materiasClave, null, 2));
+
 
         } catch (error) {
             console.error('Error al obtener materias:', error);
@@ -55,8 +60,6 @@ export default function SolicitarGrupo() {
     }, [materiasClave]);
 
 
-
-
     const [matSelec, setMatSelec] = useState(materias[0]); // Initialize with the first materia
     const [carrera, setCarrera] = useState();
     const [materiaId, setMateriaId] = useState([]);
@@ -67,35 +70,51 @@ export default function SolicitarGrupo() {
     const [profesor, setProfesor] = useState("");
     const [correoProfesor, setCorreoProfesor] = useState("");
 
-    function handleSubmit() {
-        /*
-                const data = {
-                    "materia_id": formData.get("tipo-plato"),
-                    "nombre-plato": formData.get("nombre-plato"),
-                    "ingredientes": listIngredients,
-                };
-
-                {
-                    "materia_id": "CDD-2104",
-                    "clave_carrera": "ISIC-2010-224",
-                    "turno": "VESPERTINO",
-                    "status": "PENDIENTE",
-                    "id_admin": "b63a9ff7-ae9e-4a4e-8a80-8168b4de02d4"
-                }
-        */
+    async function handleSubmit() {
         const data = {
-            //carrera: carrera.label,
             "clave_carrera": carrera.clave,
             "materia_id": matSelec.clave_materia,
             "turno": turno.toUpperCase(),
-            [`id_${userType}`]: "",
-
-            trabajaLocal,
-            profesor,
-            correoProfesor: trabajaLocal === "No" ? correoProfesor : "N/A"
+            "user_id": userEmail,
         };
+
         console.log(JSON.stringify(data, null, 2));
+
+        try {
+            const response = await fetch("http://127.0.0.1:5000/materias_propuestas/create_materia_propuesta", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                Swal.fire({
+                    title: "Oh no, ha sucedido un error!",
+                    text: `${errorData}`,
+                    icon: "error",
+                });
+            } else {
+                const result = await response.json();
+                Swal.fire({
+                    text: "Registro exitoso, tu grupo ha sido solicitado",
+                    icon: "success",
+                });
+                navigate('/students/inicio');
+
+            }
+        } catch (error) {
+            Swal.fire({
+                title: "Oh no, ha sucedido un error!",
+                text: `${error}`,
+                icon: "error",
+            });
+        }
     }
+
 
 
     return (

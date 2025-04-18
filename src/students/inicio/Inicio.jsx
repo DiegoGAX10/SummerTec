@@ -121,7 +121,7 @@ function Inicio() {
                 </div>
             </div>
 
-            <MateriasGrid materias={materias}/> {/* Render the MateriasGrid component */}
+            <MateriasGrid materias={materias}/>
         </div>
     );
 }
