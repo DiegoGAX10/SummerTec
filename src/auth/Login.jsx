@@ -30,6 +30,9 @@ const Login = () => {
         localStorage.setItem("userEmail", user.email); // Optional: store user data
         localStorage.setItem("userType", user.user_type); // Optional: store role
         localStorage.setItem("full_name", user.nombre_completo)
+        localStorage.setItem("role", user.role)
+
+
 
 
         Swal.fire({
@@ -37,7 +40,7 @@ const Login = () => {
           text: `Bienvenido ${user.nombre_completo}`,
           icon: "success",
         });
-        navigate("/students");
+        navigate(`/${localStorage.getItem("userType")}`);
       } else {
         Swal.fire({
           title: "Error",

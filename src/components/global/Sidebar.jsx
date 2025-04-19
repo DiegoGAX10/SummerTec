@@ -5,36 +5,36 @@ import { MdGroups, MdAddBox, MdNotifications, MdSettings, MdLogout } from "react
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { IoHome } from "react-icons/io5";
 
-const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
+const Sidebar = ({ isOpen, toggleSidebar, handleLogout, userType}) => {
     const menuItems = [
         {
-            label: 'Inicio',
+            label: 'InicioEstudiantes',
             icon: <IoHome size={24} />,
-            path: '/students/inicio',
+            path: `/${userType}/inicio`,
             color: 'text-[var(--primary-color)]'
         },
         {
             label: 'Mis grupos',
             icon: <MdGroups size={24} />,
-            path: '/students/mis-grupos',
+            path: `/${userType}/mis-grupos`,
             color: 'text-[var(--primary-color)]'
         },
         {
             label: 'Solicitar grupo',
             icon: <MdAddBox size={24} />,
-            path: '/students/solicitar-grupo',
+            path: `/${userType}/solicitar-grupo`,
             color: 'text-[var(--primary-color)]'
         },
         {
             label: 'Notificaciones',
             icon: <MdNotifications size={24} />,
-            path: '/students/notificaciones',
+            path: `/${userType}/notificaciones`,
             color: 'text-[var(--primary-color)]'
         },
         {
             label: 'Ajustes',
             icon: <MdSettings size={24} />,
-            path: '/students/ajustes',
+            path: `/${userType}/ajustes`,
             color: 'text-[var(--primary-color)]'
         },
         {

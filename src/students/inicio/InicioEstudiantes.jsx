@@ -19,7 +19,7 @@ import Swal from "sweetalert2"; // Adjust the import path as necessary
 
 import Constants from "../../utils/constants/Constants.jsx";
 
-function Inicio() {
+function InicioEstudiantes() {
 
     const handleSelect = (item) => {
         console.log('Selected item:', item);
@@ -126,4 +126,4 @@ function Inicio() {
     );
 }
 
-export default Inicio;
+export default InicioEstudiantes;

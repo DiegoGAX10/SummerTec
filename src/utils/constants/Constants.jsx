@@ -36,6 +36,11 @@ class Constants {
         { label: 9 },
         { label: 10 },
     ];
+
+    static names = ["Andrea Morales", "Carlos Gómez", "Lucía Fernández", "Diego Torres", "Valeria Ruiz"];
+
+
+
 }
 
 export default Constants;
