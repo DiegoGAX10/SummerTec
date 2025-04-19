@@ -53,6 +53,8 @@ export default function SolicitarGrupo() {
             console.error('Error al obtener materias:', error);
             setMateriasClave([]);
 
+
+
             if (error.response && error.response.status === 404) {
                 await Swal.fire({
                     title: "Sin materias registradas",
@@ -87,30 +89,38 @@ export default function SolicitarGrupo() {
 
         try {
             const response = await fetch("http://127.0.0.1:5000/materias_propuestas/create_materia_propuesta", {
-                method: "POST", headers: {
-                    "Content-Type": "application/json", "Authorization": `Bearer ${token}`,
-                }, body: JSON.stringify(data),
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify(data),
             });
 
+            const result = await response.json();
+
             if (!response.ok) {
-                const errorData = await response.json();
                 Swal.fire({
-                    title: "Oh no, ha sucedido un error!", text: `${errorData}`, icon: "error",
+                    title: "Oh no, ha sucedido un error!",
+                    text: result.error || "Error desconocido",
+                    icon: "error",
                 });
             } else {
-                const result = await response.json();
                 Swal.fire({
-                    text: "Registro exitoso, tu grupo ha sido solicitado", icon: "success",
+                    text: result.message || "Registro exitoso, tu grupo ha sido solicitado",
+                    icon: "success",
                 });
-                navigate('/students/inicio');
-
+                navigate('/estudiante/inicio');
             }
         } catch (error) {
             Swal.fire({
-                title: "Oh no, ha sucedido un error!", text: `${error}`, icon: "error",
+                title: "Oh no, ha sucedido un error!",
+                text: error.message || String(error),
+                icon: "error",
             });
         }
     }
+
 
 
     // Trigger when `carrera` changes
