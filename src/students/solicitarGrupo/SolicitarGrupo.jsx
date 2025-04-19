@@ -1,7 +1,4 @@
 import React, {useEffect, useState} from "react";
-import materiasJson from "./materias.json"; // Ensure this path is correct
-
-const materias = materiasJson.materias; // Access the materias array from the JSON
 
 import Constants from "../../utils/constants/Constants.jsx";
 import axios from "axios";
@@ -62,7 +59,14 @@ export default function SolicitarGrupo() {
                     html: `No se encontraron materias para <strong>${carrera.label}</strong>`,
                     icon: "info"
                 });
-            } else {
+            }else if(error.response && error.response.status === 400){
+                await Swal.fire({
+                    title: "Error",
+                    html: `No se encontraron materias para <strong>${carrera.label}</strong>`,
+                    icon: "info"
+                });
+            }
+            else {
                 await Swal.fire({
                     title: "Error", text: "No se pudieron obtener las materias.", icon: "error"
                 });
