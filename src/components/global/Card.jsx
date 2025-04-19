@@ -1,6 +1,7 @@
 import {GraduationCap} from 'lucide-react';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FiEdit, FiTrash} from 'react-icons/fi';
+import {MdGroupAdd} from "react-icons/md";
 import Swal from "sweetalert2";
 import Constants from "../../utils/constants/Constants.jsx";
 import {MdAddBox} from "react-icons/md";
@@ -11,14 +12,22 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
 
     const [isModalOpen, setIsModalOpen] = useState(false);  // State for controlling modal visibility
 
-   // State for controlling modal visibility
+    // State for controlling modal visibility
     const [isEditable, setIsEditable] = useState(false);
+    const [canEdit, setCanEdit] = useState(false);
+    const userType = localStorage.getItem('userType');
+
+
+    // Trigger when `carrera` changes
+    useEffect(() => {
+        console.log('userType:', userType);
+        if (userType === 'admin') {
+            setCanEdit(true);
+        }
+    },);
+
+
     const names = Constants.names;
-
-
-
-
-
 
 
     const handleDelete = async (id_materia) => {
@@ -64,7 +73,7 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
 
     function handleHorario(horario) {
 
-        return isEditable ? (<div className="flex flex-row gap-3">
+        return (isEditable && canEdit) ? (<div className="flex flex-row gap-3">
             <label className="text-gray-500 text-lg font-semibold">Horario:</label>
             <select name="selectHorario" id="selectHorario"
                     className="p-2 border rounded">
@@ -83,17 +92,17 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
 
     function handleCupo(cupo) {
         return (
-            isEditable ? (
-               <div className="flex flex-row gap-3 ">
-                   <label className="text-gray-500 text-lg font-semibold">Cupo:</label>
-                   <input
-                       type="number"
-                       value={cupoState}
-                       onChange={(e) => setCupoState(e.target.value)}
-                       className="appearance-auto p-2 border rounded w-24"
-                   />
+            (isEditable && canEdit) ? (
+                <div className="flex flex-row gap-3 ">
+                    <label className="text-gray-500 text-lg font-semibold">Cupo:</label>
+                    <input
+                        type="number"
+                        value={cupoState}
+                        onChange={(e) => setCupoState(e.target.value)}
+                        className="appearance-auto p-2 border rounded w-24"
+                    />
 
-               </div>
+                </div>
             ) : (<p className="text-gray-500 text-lg">
                 <span className="font-semibold">Cupo:</span> {cupo}
             </p>)
@@ -103,7 +112,7 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
 
     function handleProfesor(profesor) {
         return (
-            isEditable ? (
+            (isEditable && canEdit) ? (
                 <div className="flex flex-row gap-3">
                     <label className="text-gray-500 text-lg font-semibold">Profesor:</label>
                     <select name="selectProfesor" id="selectHorario"
@@ -121,6 +130,49 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
                 <span className="font-semibold">Profesor:</span> {profesor}
             </p>)
 
+        );
+    }
+
+
+    function handleButtons(id_materia) {
+        return (
+            <div className="flex justify-center gap-2">
+                {(canEdit ) ? (
+                    <>
+                        <button
+                            className="flex items-center gap-2 text-white bg-yellow-500 hover:bg-yellow-600 font-medium rounded-lg text-sm px-4 py-2.5 cursor-pointer"
+                            onClick={() => setIsEditable(prev => !prev)}
+                        >
+                            <FiEdit />
+                            Editar
+                        </button>
+
+                        <button
+                            className="flex items-center gap-2 text-white bg-red-800 hover:bg-red-900 font-medium rounded-lg text-sm px-4 py-2.5 cursor-pointer"
+                            onClick={() => handleDelete(id_materia)}
+                        >
+                            <FiTrash />
+                            Borrar
+                        </button>
+
+                        {isEditable && (
+                            <button
+                                type="submit"
+                                className="flex items-center gap-2 text-white bg-green-800 hover:bg-green-900 font-medium rounded-lg text-sm px-4 py-2.5 cursor-pointer"
+                            >
+                                Guardar
+                            </button>
+                        )}
+                    </>
+                ) : (
+                    <button
+                        type="submit"
+                        className="flex items-center gap-2 text-white bg-[var(--primary-color)] hover:bg-[#163560] font-medium rounded-lg text-sm px-4 py-2.5 cursor-pointer"
+                    >
+                        Solicitar unirme
+                    </button>
+                )}
+            </div>
         );
     }
 
@@ -221,31 +273,8 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
                             </div>
 
                             {/* Learn More Button */}
-                            <div className="flex justify-center gap-2">
-                                <button
-                                    className="flex items-center gap-2 text-white bg-yellow-500 hover:bg-yellow-600 font-medium rounded-lg text-sm px-4 py-2.5 cursor-pointer"
-                                    onClick={() => setIsEditable(prev => !prev)}
-                                >
-                                    <FiEdit/>
-                                    Editar
-                                </button>
 
-
-                                <button
-                                    className="flex items-center gap-2 text-white bg-red-800 hover:bg-red-900 font-medium rounded-lg text-sm px-4 py-2.5 cursor-pointer"
-                                    onClick={() => handleDelete(id_materia)}
-                                >
-                                    <FiTrash/>
-
-                                    Borrar
-                                </button>
-
-                                {isEditable && (<button type="submit"
-                                                        className="flex  items-center gap-2 text-white bg-green-800 hover:bg-green-900 font-medium rounded-lg text-sm px-4 py-2.5 cursor-pointer"
-
-                                >Guardar</button>)}
-                            </div>
-
+                            {handleButtons(id_materia)}
 
                         </div>
 
