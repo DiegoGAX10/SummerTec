@@ -1,0 +1,30 @@
+{
+    "materias": [
+        {
+            "nombre": "Taller de base de datos",
+            "creditos": 6,
+            "horas": 120,
+            "clave": "Clave2"
+        },
+        {
+            "nombre": "Sistemas operativos",
+            "creditos": 6,
+            "horas": 120,
+            "clave": "Clave4"
+        },
+        {
+            "nombre": "Administracion de base de datos",
+            "creditos": 6,
+            "horas": 120,
+            "clave": "Clave3"
+        },
+        {
+            "nombre": "Taller de sistemas operativos",
+            "creditos": 6,
+            "horas": 120,
+            "clave": "Clave1"
+        }
+
+
+    ]
+}

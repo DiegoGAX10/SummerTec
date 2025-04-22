@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Swal from "sweetalert2";
-import { useNavigate } from 'react-router-dom';
+import Constants from "../utils/constants/Constants.jsx";
+import {useNavigate} from 'react-router-dom';
+
 const Register = () => {
+    const [claveCarrera, setClaveCarrera] = useState('');
+    const [carrera, setCarrera] = useState();
+
     const [numero_control, setNumeroControl] = useState('');
     const [nombre_completo, setNombreCompleto] = useState('');
     const [email, setEmail] = useState('');
@@ -9,8 +14,11 @@ const Register = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [phone_number, setPhoneNumber] = useState('');
     const navigate = useNavigate();
-    const handleSignUp = async (event) => {
-        event.preventDefault();
+
+
+    async function handleSignUp(formData) {
+
+
         if (password !== confirmPassword) {
             Swal.fire({
                 title: "Oh no!",
@@ -25,16 +33,17 @@ const Register = () => {
             });
         } else {
             const registrationData = {
-                numero_control,
-                nombre_completo,
-                email,
-                password,
-                phone_number
+                "numero_control": formData.get("numero_control"),
+                "nombre_completo": formData.get("nombre_completo"),
+                "email": email,
+                "password": formData.get("password"),
+                "phone_number": formData.get("phone_number"),
+                "clave_carrera": claveCarrera,
             };
 
             try {
-                console.log('Sending registration data:', registrationData);
-                const response = await fetch('https://summer-tec-backend.onrender.com/auth/signup', {
+                console.log('Sending registration data:',  JSON.stringify(registrationData, null, 2));
+                const response = await fetch('http://127.0.0.1:5000/auth/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -43,7 +52,7 @@ const Register = () => {
                 });
 
                 console.log('Response status:', response.status);
-                if (response.status === 201) {  // Verifica si el status es 201
+                if (response.status === 201) {
                     Swal.fire({
                         text: "Registro exitoso, tu cuenta ha sido creada correctamente",
                         icon: "success",
@@ -65,44 +74,73 @@ const Register = () => {
                 });
             }
         }
-    };
 
-    const generateEmail = (numero_control) => {
-        return 'L' + numero_control + '@zacatepec.tecnm.mx';
-    };
+
+    }
+
 
     const handleNumeroControl = (value) => {
         setNumeroControl(value);
         setEmail(generateEmail(value));
     };
 
-    return (
-        <section className="bg-gray-50">
-            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                <img className="w-35 mb-8" src="/summer_tec.svg" alt="logo" />
+    const generateEmail = (numero_control) => {
+        return 'L' + numero_control + '@zacatepec.tecnm.mx';
+    };
 
-                <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
+
+    return (
+        <section className="bg-gray-50 min-h-screen overflow-y-auto ">
+            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto min-h-screen">
+                <img className="w-35 mb-8" src="/summer_tec.svg" alt="logo"/>
+                <div
+                    className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:p-0 max-h-[90vh] overflow-y-auto">
 
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className="text-xl font-bold text-gray-900 md:text-2xl">Crea una cuenta</h1>
-                        <form className="space-y-4 md:space-y-6" onSubmit={handleSignUp}>
+                        <form className="space-y-4 md:space-y-6" action={handleSignUp}>
                             <div>
-                                <label htmlFor="controlNumber" className="block mb-2 text-sm font-medium text-gray-900">
+                                <label htmlFor="numero_control"
+                                       className="block mb-2 text-sm font-medium text-gray-900">
                                     Número de control
                                 </label>
-                                <input type="text" name="controlNumber" id="controlNumber"
+                                <input type="text" name="numero_control"
+                                       id="numero_control"
                                        className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
-                                       value={numero_control} onChange={(e) => handleNumeroControl(e.target.value)} required
+                                       value={numero_control} onChange={(e) => handleNumeroControl(e.target.value)}
+                                       required
                                        pattern="\d*" inputMode="numeric"
                                 />
                             </div>
+                            <label className="block mt-4">Escoge tu carrera</label>
+                            <select
+                                className="w-full p-2 border rounded"
+                                value={claveCarrera} // Set the value to claveCarrera directly
+                                id="claveCarrera"
+
+                                required
+                                onChange={(e) => {
+                                    const selectedCarrera = Constants.carreras.find((c) => c.clave === e.target.value);
+                                    if (selectedCarrera) {
+                                        setClaveCarrera(selectedCarrera.clave); // Set claveCarrera to the clave
+                                    }
+                                }}
+                            >
+                                <option value="" disabled>-- Selecciona tu carrera --</option>
+                                {Constants.carreras.map((carrera, index) => (
+                                    <option key={index} value={carrera.clave}> {/* Use clave as the value */}
+                                        {carrera.label}
+                                    </option>
+                                ))}
+                            </select>
                             <div>
                                 <label htmlFor="fullName" className="block mb-2 text-sm font-medium text-gray-900">
                                     Nombre completo
                                 </label>
-                                <input type="text" name="fullName" id="fullName"
+                                <input type="text" name="nombre_completo" id="nombre_completo"
                                        className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
-                                       value={nombre_completo} onChange={(e) => setNombreCompleto(e.target.value)} required
+                                       value={nombre_completo} onChange={(e) => setNombreCompleto(e.target.value)}
+                                       required
                                        pattern="^[A-Za-zÀ-ÿ\s]+$" title="Solo letras y espacios"
                                 />
                             </div>
@@ -116,19 +154,22 @@ const Register = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor="confirmPassword" className="block mb-2 text-sm font-medium text-gray-900">
+                                <label htmlFor="confirmPassword"
+                                       className="block mb-2 text-sm font-medium text-gray-900">
                                     Confirma tu contraseña
                                 </label>
-                                <input type="password" name="confirmPassword" id="confirmPassword" placeholder="••••••••"
+                                <input type="password" name="confirmPassword" id="confirmPassword"
+                                       placeholder="••••••••"
                                        className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
-                                       value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required
+                                       value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
+                                       required
                                 />
                             </div>
                             <div>
                                 <label htmlFor="phoneNumber" className="block mb-2 text-sm font-medium text-gray-900">
                                     Número de teléfono
                                 </label>
-                                <input type="text" name="phoneNumber" id="phoneNumber"
+                                <input type="text" name="phone_number" id="phone_number"
                                        className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
                                        value={phone_number} onChange={(e) => setPhoneNumber(e.target.value)} required
                                        pattern="\d*" inputMode="numeric"
