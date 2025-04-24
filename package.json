@@ -35,8 +35,6 @@
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
     "lint": "eslint .",
-    "serve": "vite preview --host 0.0.0.0",
-    "start": "vite preview --host"
+    "serve": "vite preview --host 0.0.0.0"
   }
-
 }

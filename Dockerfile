@@ -1,12 +1,17 @@
+# Usa una versión más reciente de Node
 FROM node:20-alpine
 
 WORKDIR /app
 
 COPY package.json package-lock.json ./
 
-USER root
+# Instala las dependencias
 RUN npm install
 
+# Copia el resto de los archivos
 COPY . .
 
-CMD ["npm", "start"]
+# Expón el puerto que Vite usará
+EXPOSE 5173
+
+CMD ["npm", "run", "dev"]
