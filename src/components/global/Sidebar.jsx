@@ -1,11 +1,17 @@
-// Sidebar.jsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MdGroups, MdAddBox, MdNotifications, MdSettings, MdLogout } from "react-icons/md";
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { IoHome } from "react-icons/io5";
 
-const Sidebar = ({ isOpen, toggleSidebar, handleLogout, userType}) => {
+const Sidebar = ({ isOpen, toggleSidebar, handleLogout, userType }) => {
+    const [userData, setUserData] = useState({ name: '', controlNumber: '' });
+
+    useEffect(() => {
+        const name = localStorage.getItem('full_name') || 'Usuario';
+        setUserData({name});
+    }, []);
+
     const menuItems = [
         {
             label: 'InicioEstudiantes',
@@ -48,6 +54,12 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout, userType}) => {
 
     return (
         <div className={`fixed top-0 left-0 h-full bg-white text-[var(--primary-color)] shadow-xl transition-all duration-300 ease-in-out ${isOpen ? 'w-64' : 'w-20'}`}>
+            {/* User Info */}
+            <div className="p-4 text-center border-b border-gray-200">
+                <h2 className="text-lg font-bold text-gray-800">{userData.name}</h2>
+                <p className="text-sm text-gray-600">{userData.controlNumber}</p>
+            </div>
+
             {/* Toggle Button */}
             <div className="flex justify-end p-4">
                 <button onClick={toggleSidebar} className="cursor-pointer flex items-center justify-center rounded-full bg-[var(--primary-color)] text-white p-2 hover:bg-[#163560] transition-colors duration-200">

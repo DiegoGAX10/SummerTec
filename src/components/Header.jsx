@@ -37,7 +37,7 @@ const Header = () => {
                 <div className={`nav-container ${mobileMenuOpen ? 'mobile-open' : ''}`}>
                     {/* Buscador */}
                     <form className="search-form" onSubmit={handleSearchSubmit}>
-                        <div className="search-container">
+                        {/*<div className="search-container">
                             <input
                                 type="text"
                                 value={searchTerm}
@@ -48,7 +48,7 @@ const Header = () => {
                             <button type="submit" className="search-button">
                                 <FaSearch className="search-icon" />
                             </button>
-                        </div>
+                        </div>*/}
                     </form>
 
                 </div>
