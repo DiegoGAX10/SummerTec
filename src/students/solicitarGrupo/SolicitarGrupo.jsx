@@ -34,13 +34,13 @@ export default function SolicitarGrupo() {
 
 
     const [materiasClave, setMateriasClave] = useState([]);
-
+    const baseurl = import.meta.env.VITE_BASE_URL;
 
     async function getMateriasByClave() {
         if (!carrera || !carrera.clave) return; // prevent empty requests
 
         try {
-            const response = await axios.get(`http://localhost:5000/materias/materias_by_clave_carrera/${carrera.clave}`, {
+            const response = await axios.get(`${baseurl}/materias/materias_by_clave_carrera/${carrera.clave}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -88,7 +88,7 @@ export default function SolicitarGrupo() {
         console.log(JSON.stringify(data, null, 2));
 
         try {
-            const response = await fetch("http://127.0.0.1:5000/materias_propuestas/create_materia_propuesta", {
+            const response = await fetch(`${baseurl}/materias_propuestas/create_materia_propuesta`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

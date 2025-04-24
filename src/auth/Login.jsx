@@ -7,16 +7,19 @@ const Login = () => {
   const [controlNumber, setControlNumber] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const baseurl = import.meta.env.VITE_BASE_URL;
 
-  const generateEmail = (controlNumber) => {
-    return `L${controlNumber}@zacatepec.tecnm.mx`;
-  };
+  // const generateEmail = (controlNumber) => {
+  //   return `L${controlNumber}@zacatepec.tecnm.mx`;
+  // };
 
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const email = generateEmail(controlNumber);
-      const response = await axios.post('http://localhost:5000/auth/login', {
+      // const email = generateEmail(controlNumber);
+      const email = controlNumber;
+
+      const response = await axios.post(`${baseurl}/auth/login`, {
         email: email,
         password: password,
       });

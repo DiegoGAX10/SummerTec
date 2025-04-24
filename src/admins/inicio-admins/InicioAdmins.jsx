@@ -22,6 +22,10 @@ import Constants from "../../utils/constants/Constants.jsx";
 
 
 export default function InicioAdmins() {
+
+
+    const baseurl = import.meta.env.VITE_BASE_URL;
+
     const handleSelect = (item) => {
         console.log('Selected item:', item);
         // Handle the selected item (e.g., navigate, filter data, etc.)
@@ -34,7 +38,7 @@ export default function InicioAdmins() {
 // Function to fetch materias
     const getMaterias = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/materias_propuestas/materias_propuestas", {
+            const response = await axios.get(`${baseurl}/materias_propuestas/materias_propuestas`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

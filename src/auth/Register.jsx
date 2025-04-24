@@ -14,6 +14,7 @@ const Register = () => {
     const [phone_number, setPhoneNumber] = useState('');
     const navigate = useNavigate();
 
+    const baseurl = import.meta.env.VITE_BASE_URL;
 
     async function handleSignUp(formData) {
 
@@ -42,7 +43,7 @@ const Register = () => {
 
             try {
                 console.log('Sending registration data:',  JSON.stringify(registrationData, null, 2));
-                const response = await fetch('http://localhost:5000/auth/signup', {
+                const response = await fetch(`${baseurl}/auth/signup`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
