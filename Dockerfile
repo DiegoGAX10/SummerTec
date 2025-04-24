@@ -3,15 +3,14 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+# <- esta línea desactiva la instalación del binario nativo de esbuild
+ENV ESBUILD_BINARY_PATH=/dev/null
 
-# Instala las dependencias
+COPY package.json package-lock.json ./
 RUN npm install
 
-# Copia el resto de los archivos
 COPY . .
 
-# Expón el puerto que Vite usará
 EXPOSE 5173
-
 CMD ["npm", "run", "dev"]
+
