@@ -6,7 +6,6 @@ import {useNavigate} from 'react-router-dom';
 const Register = () => {
     const [claveCarrera, setClaveCarrera] = useState('');
     const [carrera, setCarrera] = useState();
-
     const [numero_control, setNumeroControl] = useState('');
     const [nombre_completo, setNombreCompleto] = useState('');
     const [email, setEmail] = useState('');
@@ -43,7 +42,7 @@ const Register = () => {
 
             try {
                 console.log('Sending registration data:',  JSON.stringify(registrationData, null, 2));
-                const response = await fetch('https://summer-tec-backend.onrender.com/auth/signup', {
+                const response = await fetch('http://localhost:5000/auth/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

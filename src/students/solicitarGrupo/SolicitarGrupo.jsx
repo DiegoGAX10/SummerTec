@@ -40,7 +40,7 @@ export default function SolicitarGrupo() {
         if (!carrera || !carrera.clave) return; // prevent empty requests
 
         try {
-            const response = await axios.get(`https://summer-tec-backend.onrender.com/materias/materias_by_clave_carrera/${carrera.clave}`, {
+            const response = await axios.get(`http://localhost:5000/materias/materias_by_clave_carrera/${carrera.clave}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
