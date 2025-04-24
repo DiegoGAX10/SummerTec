@@ -16,7 +16,7 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
     const [isEditable, setIsEditable] = useState(false);
     const [canEdit, setCanEdit] = useState(false);
     const userType = localStorage.getItem('userType');
-
+    const baseurl = import.meta.env.VITE_BASE_URL;
 
     // Trigger when `carrera` changes
     useEffect(() => {
@@ -32,7 +32,7 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
 
     const handleDelete = async (id_materia) => {
         try {
-            const response = await fetch(`http://localhost:5000/materias_propuestas/delete_materias_propuestas/${id_materia}`, {
+            const response = await fetch(`${baseurl}/materias_propuestas/delete_materias_propuestas/${id_materia}`, {
                 method: 'DELETE', headers: {
                     'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json',
                 },

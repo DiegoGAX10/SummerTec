@@ -32,11 +32,11 @@ function InicioEstudiantes() {
     const [materias, setMaterias] = useState([]);
 
     const token = localStorage.getItem('authToken');
-
+    const baseurl = import.meta.env.VITE_BASE_URL;
     // Function to fetch materias
     const getMaterias = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/materias_propuestas/materias_propuestas", {
+            const response = await axios.get(`${baseurl}/materias_propuestas/materias_propuestas`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
