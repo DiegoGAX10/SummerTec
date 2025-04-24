@@ -36,7 +36,7 @@ export default function SolicitarGrupoAdmins() {
         if (!carrera || !carrera.clave) return; // prevent empty requests
 
         try {
-            const response = await axios.get(`http://127.0.0.1:5000/materias/materias_by_clave_carrera/${carrera.clave}`, {
+            const response = await axios.get(`https://summer-tec-backend.onrender.com/materias/materias_by_clave_carrera/${carrera.clave}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
