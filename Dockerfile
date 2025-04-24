@@ -1,5 +1,5 @@
 # Usa Node 20 para compatibilidad con tus paquetes
-FROM node:20-alpine
+FROM node:18-alpine
 
 # Establecer el directorio de trabajo
 WORKDIR /app
