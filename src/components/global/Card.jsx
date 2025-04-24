@@ -32,7 +32,7 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
 
     const handleDelete = async (id_materia) => {
         try {
-            const response = await fetch(`http://127.0.0.1:5000/materias_propuestas/delete_materias_propuestas/${id_materia}`, {
+            const response = await fetch(`http://localhost:5000/materias_propuestas/delete_materias_propuestas/${id_materia}`, {
                 method: 'DELETE', headers: {
                     'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json',
                 },
@@ -70,6 +70,38 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
     const openModal = () => setIsModalOpen(true);  // Open modal
     const closeModal = () => setIsModalOpen(false); // Close modal
 
+    const handleJoinRequest = async (id_materia) => {
+        try {
+            const response = await fetch(`http://localhost:5000/estudiante/inscribir`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ materia_propuesta_id: id_materia }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                Swal.fire({
+                    text: data.message || "Solicitud enviada con éxito",
+                    icon: "success",
+                });
+            } else {
+                const error = await response.json();
+                Swal.fire({
+                    text: error.error || "Error al enviar la solicitud",
+                    icon: "error",
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: "Error",
+                text: `${error}`,
+                icon: "error",
+            });
+        }
+    };
 
     function handleHorario(horario) {
 
@@ -166,8 +198,9 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
                     </>
                 ) : (
                     <button
-                        type="submit"
+                        type="button"
                         className="flex items-center gap-2 text-white bg-[var(--primary-color)] hover:bg-[#163560] font-medium rounded-lg text-sm px-4 py-2.5 cursor-pointer"
+                        onClick={() => handleJoinRequest(id_materia)}
                     >
                         Solicitar unirme
                     </button>
