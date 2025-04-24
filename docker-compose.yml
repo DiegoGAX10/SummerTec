@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   vite-app:
     build: .
@@ -8,4 +9,4 @@ services:
       - /app/node_modules
     environment:
       - VITE_HOST=0.0.0.0
-  
+    command: npm run dev

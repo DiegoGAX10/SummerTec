@@ -1,24 +1,17 @@
-# Usa Node 20 para compatibilidad con tus paquetes
-FROM node:18-alpine
+# Usa una versión más reciente de Node
+FROM node:20-alpine
 
-# Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos de dependencias
 COPY package.json package-lock.json ./
 
-# Si usas paquetes privados, incluye tu .npmrc con autenticación
-# COPY .npmrc .npmrc
-
-# Instalar dependencias y borrar .npmrc si se usó
+# Instala las dependencias
 RUN npm install
-# RUN npm install && rm -f .npmrc
 
-# Copiar el resto del código fuente
+# Copia el resto de los archivos
 COPY . .
 
-# Exponer el puerto de Vite
+# Expón el puerto que Vite usará
 EXPOSE 5173
 
-# Comando para iniciar Vite en modo desarrollo
 CMD ["npm", "run", "dev"]
