@@ -8,7 +8,7 @@ export default function MisGrupos() {
     // Function to fetch the groups the user has requested to join
     const fetchGrupos = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/inscritos/materia_propuesta_id`, {
+            const response = await fetch(`${baseurl}/inscritos/`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,

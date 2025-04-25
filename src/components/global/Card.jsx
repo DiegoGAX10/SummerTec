@@ -72,7 +72,7 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
 
     const handleJoinRequest = async (id_materia) => {
         try {
-            const response = await fetch(`http://localhost:5000/estudiante/inscribir`, {
+            const response = await fetch(`${baseurl}/estudiante/inscribir`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
