@@ -4,7 +4,7 @@ import {FiEdit, FiTrash} from 'react-icons/fi';
 import {MdGroupAdd} from "react-icons/md";
 import Swal from "sweetalert2";
 import Constants from "../../utils/constants/Constants.jsx";
-import {MdAddBox} from "react-icons/md";
+import axios from "axios";
 
 function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo, estado, id_materia}) {
 
@@ -70,34 +70,103 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
     const openModal = () => setIsModalOpen(true);  // Open modal
     const closeModal = () => setIsModalOpen(false); // Close modal
 
-    const handleJoinRequest = async (id_materia) => {
+    const handleInscribir = async (id_materia) => {
         try {
-            const response = await fetch(`${baseurl}/estudiante/inscribir`, {
-                method: 'POST',
+            // Obtener el token y el email del estudiante
+            const token = localStorage.getItem('authToken');
+            const estudianteEmail = localStorage.getItem('userEmail');
+
+            if (!token) {
+                Swal.fire({
+                    title: "Error",
+                    text: "No hay token de autenticación. Por favor inicie sesión nuevamente.",
+                    icon: "error",
+                });
+                return;
+            }
+
+            if (!estudianteEmail) {
+                Swal.fire({
+                    title: "Error",
+                    text: "No se pudo identificar al estudiante.",
+                    icon: "error",
+                });
+                return;
+            }
+
+            // Preparar los datos para la solicitud
+            const datos = {
+                estudiante_id: estudianteEmail, // Usa el email completo como identificador
+                materia_propuesta_id: id_materia
+            };
+
+            console.log("Enviando datos:", datos);
+
+            // Realizar la solicitud principal
+            const response = await axios({
+                method: 'post',
+                url: `${baseurl}/estudiante/inscribir/`,
+                data: datos,
                 headers: {
-                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ materia_propuesta_id: id_materia }),
+                withCredentials: true
             });
 
-            if (response.ok) {
-                const data = await response.json();
+            if (response.status === 200 || response.status === 201) {
                 Swal.fire({
-                    text: data.message || "Solicitud enviada con éxito",
+                    title: "Éxito",
+                    text: "Inscripción realizada correctamente",
                     icon: "success",
+                }).then(() => {
+                    window.location.reload();
                 });
             } else {
-                const error = await response.json();
+                // Handle other success status codes
                 Swal.fire({
-                    text: error.error || "Error al enviar la solicitud",
-                    icon: "error",
+                    title: "Información",
+                    text: response.data.message || "Operación completada con estado inesperado",
+                    icon: "info",
                 });
             }
         } catch (error) {
+            console.error('Error al realizar la inscripción:', error);
+
+            let mensajeError = "Ocurrió un error al procesar la solicitud";
+
+            if (error.response) {
+                // El servidor respondió con un código de estado fuera del rango 2xx
+                console.error('Respuesta del servidor:', error.response.data);
+
+                // Intenta obtener el mensaje de error de diferentes formas posibles
+                if (error.response.data) {
+                    if (typeof error.response.data === 'string') {
+                        mensajeError = error.response.data;
+                    } else if (error.response.data.message) {
+                        mensajeError = error.response.data.message;
+                    } else if (error.response.data.error) {
+                        mensajeError = error.response.data.error;
+                    } else if (error.response.data.detail) {
+                        mensajeError = error.response.data.detail;
+                    }
+                }
+
+                // Si no se ha encontrado un mensaje específico, usa el código de estado
+                if (mensajeError === "Ocurrió un error al procesar la solicitud") {
+                    mensajeError = `Error ${error.response.status}: ${error.response.statusText}`;
+                }
+            } else if (error.request) {
+                // La solicitud fue hecha pero no se recibió respuesta
+                mensajeError = "No se pudo conectar con el servidor. Verifique su conexión.";
+            } else {
+                // Algo sucedió en la configuración de la solicitud que desencadenó un error
+                mensajeError = error.message;
+            }
+
             Swal.fire({
                 title: "Error",
-                text: `${error}`,
+                text: mensajeError,
                 icon: "error",
             });
         }
@@ -200,7 +269,7 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
                     <button
                         type="button"
                         className="flex items-center gap-2 text-white bg-[var(--primary-color)] hover:bg-[#163560] font-medium rounded-lg text-sm px-4 py-2.5 cursor-pointer"
-                        onClick={() => handleJoinRequest(id_materia)}
+                        onClick={() => handleInscribir(id_materia)}
                     >
                         Solicitar unirme
                     </button>
