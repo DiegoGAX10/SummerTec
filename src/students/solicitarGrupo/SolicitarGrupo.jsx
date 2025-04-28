@@ -73,7 +73,7 @@ export default function SolicitarGrupo() {
         if (!carrera || !carrera.clave) return;
 
         try {
-            const response = await axios.get(`${baseurl}/docentes/get_by_clave/${carrera.clave}`, {
+            const response = await axios.get(`${baseurl}/docente/get_by_clave/${carrera.clave}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
