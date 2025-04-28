@@ -105,7 +105,7 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
             // Realizar la solicitud principal
             const response = await axios({
                 method: 'post',
-                url: 'http://localhost:5000/estudiante/inscribir/',
+                url: `${baseurl}/estudiante/inscribir/`,
                 data: datos,
                 headers: {
                     'Content-Type': 'application/json',
