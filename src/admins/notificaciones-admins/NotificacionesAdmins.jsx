@@ -1,6 +1,6 @@
 import axios from "axios";
 import Swal from "sweetalert2";
-import { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import NotificationTile from "./components/NotificationTile.jsx";
 
 export default function NotificacionesAdmins() {
@@ -74,7 +74,7 @@ export default function NotificacionesAdmins() {
     return (
         <div className="p-6 space-y-4">
             {/* Search & Filters */}
-            <div className="flex flex-col gap-4 md:flex-row md:items-center">
+            <div className="flex flex-col gap-4 md:flex-row  ">
                 <input
                     type="text"
                     placeholder="Busca notificación"
@@ -83,36 +83,49 @@ export default function NotificacionesAdmins() {
                     className="w-full md:w-1/3 px-4 py-2 rounded border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
 
-                <select
-                    value={selectedCarrera}
-                    onChange={(e) => setSelectedCarrera(e.target.value)}
-                    className="px-4 py-2 rounded bg-gray-700 text-white"
-                >
-                    <option>Todas</option>
-                    <option>ISC</option>
-                    <option>II</option>
-                </select>
+                <div className="flex flex-col">
+                    <label className="text-xs text-gray-400 mb-1">Carrera</label>
+                    <select
+                        value={selectedCarrera}
+                        onChange={(e) => setSelectedCarrera(e.target.value)}
+                        className="px-4 py-2 rounded bg-gray-700 text-white"
+                    >
+                        <option>Todas</option>
+                        <option>ISC</option>
+                        <option>II</option>
+                    </select>
+                </div>
 
-                <select
-                    value={selectedTipo}
-                    onChange={(e) => setSelectedTipo(e.target.value)}
-                    className="px-4 py-2 rounded bg-gray-700 text-white"
-                >
-                    <option>Todos</option>
-                    <option>Nuevo grupo</option>
-                    <option>Grupo cancelado</option>
-                </select>
+                <div className="flex flex-col">
+                    <label className="text-xs text-gray-400 mb-1">Tipo</label>
+                    <select
+                        value={selectedTipo}
+                        onChange={(e) => setSelectedTipo(e.target.value)}
+                        className="px-4 py-2 rounded bg-gray-700 text-white"
+                    >
+                        <option>Todos</option>
+                        <option>Nuevo grupo</option>
+                        <option>Grupo cancelado</option>
+                    </select>
 
-                <select
-                    value={selectedFecha}
-                    onChange={(e) => setSelectedFecha(e.target.value)}
-                    className="px-4 py-2 rounded bg-gray-700 text-white"
-                >
-                    <option>Hoy</option>
-                    <option>Últimos 3 días</option>
-                </select>
+                </div>
+
+
+    <div className="flex flex-col">
+        <label className="text-xs text-gray-400 mb-1">Fecha</label>
+        <select
+            value={selectedFecha}
+            onChange={(e) => setSelectedFecha(e.target.value)}
+            className="px-4 py-2 rounded bg-gray-700 text-white"
+        >
+            <option>Hoy</option>
+            <option>Últimos 3 días</option>
+        </select>
+    </div>
 
                 {/* New sort order dropdown */}
+            <div className="flex flex-col">
+                <label className="text-xs text-gray-400 mb-1">Fecha</label>
                 <select
                     value={sortOrder}
                     onChange={(e) => setSortOrder(e.target.value)}
@@ -121,6 +134,7 @@ export default function NotificacionesAdmins() {
                     <option value="desc">Más recientes primero</option>
                     <option value="asc">Más antiguos primero</option>
                 </select>
+            </div>
             </div>
 
             <p className="text-sm text-gray-600">
