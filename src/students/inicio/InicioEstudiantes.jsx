@@ -78,57 +78,10 @@ function InicioEstudiantes() {
 
     // Función para obtener los créditos únicos de las materias
     const getCreditos = async () => {
-        try {
-            const response = await axios.get(`${baseurl}/materias/creditos_disponibles`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            console.log('Créditos recibidos:', response.data);
-            // Transformamos la respuesta al formato necesario para el Dropdown
-            const creditosFormateados = response.data.map(credito => ({
-                id: credito,
-                label: `${credito} créditos`,
-                value: credito
-            }));
-            setCreditos(creditosFormateados);
-
-        } catch (error) {
-            console.error('Error al obtener créditos:', error);
-            // Si falla, intentamos extraer créditos de las materias cargadas
-            const creditosUnicos = [...new Set(materias.map(materia => materia.creditos))];
-            const creditosFormateados = creditosUnicos.map(credito => ({
-                id: credito,
-                label: `${credito} créditos`,
-                value: credito
-            }));
-            setCreditos(creditosFormateados);
-        }
     };
 
     // Función para obtener edificios (si tienes esta información en la BD)
     const getEdificios = async () => {
-        try {
-            const response = await axios.get(`${baseurl}/edificios/getAll`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            console.log('Edificios recibidos:', response.data);
-            const edificiosFormateados = response.data.map(edificio => ({
-                id: edificio.id,
-                label: edificio.nombre,
-                value: edificio.id
-            }));
-            setEdificios(edificiosFormateados);
-
-        } catch (error) {
-            console.error('Error al obtener edificios:', error);
-            // Usamos valores por defecto de Constants.edificios si está disponible
-            setEdificios([]);
-        }
     };
 
     // Función para manejar la selección de filtros
