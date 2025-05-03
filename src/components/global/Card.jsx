@@ -9,8 +9,13 @@ import axios from "axios";
 function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo, estado, id_materia}) {
 
     const token = localStorage.getItem('authToken');
-
     const [isModalOpen, setIsModalOpen] = useState(false);  // State for controlling modal visibility
+    const [isInteresadosModalOpen, setIsInteresadosModalOpen] = useState(false); // State for controlling interesados modal
+    const [interesados, setInteresados] = useState([]); // State for storing interesados
+    const [isLoadingInteresados, setIsLoadingInteresados] = useState(false); // Loading state
+    const [addAlumnoModalOpen, setAddAlumnoModalOpen] = useState(false); // State for add student modal
+    const [newEstudianteEmail, setNewEstudianteEmail] = useState(''); // State for new student email
+    const [isAddingAlumno, setIsAddingAlumno] = useState(false); // Loading state for adding
 
     // State for controlling modal visibility
     const [isEditable, setIsEditable] = useState(false);
@@ -69,6 +74,210 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
 
     const openModal = () => setIsModalOpen(true);  // Open modal
     const closeModal = () => setIsModalOpen(false); // Close modal
+
+    // Función para obtener los interesados en la materia
+    const getInteresados = async () => {
+        try {
+            setIsLoadingInteresados(true);
+            const response = await axios({
+                method: 'get',
+                url: `${baseurl}/estudiante/inscritos/${id_materia}`,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                withCredentials: true
+            });
+
+            if (response.status === 200) {
+                setInteresados(response.data);
+                setIsInteresadosModalOpen(true);
+            } else {
+                Swal.fire({
+                    title: "Error",
+                    text: "No se pudieron obtener los interesados",
+                    icon: "error",
+                });
+            }
+        } catch (error) {
+            console.error('Error al obtener interesados:', error);
+
+            let mensajeError = "Ocurrió un error al obtener los interesados";
+
+            if (error.response) {
+                if (error.response.data) {
+                    if (typeof error.response.data === 'string') {
+                        mensajeError = error.response.data;
+                    } else if (error.response.data.message) {
+                        mensajeError = error.response.data.message;
+                    } else if (error.response.data.error) {
+                        mensajeError = error.response.data.error;
+                    } else if (error.response.data.detail) {
+                        mensajeError = error.response.data.detail;
+                    }
+                }
+            }
+
+            Swal.fire({
+                title: "Error",
+                text: mensajeError,
+                icon: "error",
+            });
+        } finally {
+            setIsLoadingInteresados(false);
+        }
+    };
+
+    // Función para eliminar un estudiante de la materia
+    const handleEliminarEstudiante = async (estudianteId) => {
+        try {
+            Swal.fire({
+                title: "¿Estás seguro?",
+                text: "El estudiante será eliminado de esta materia",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const response = await axios({
+                        method: 'delete',
+                        url: `${baseurl}/estudiante/baja/`,
+                        data: {
+                            estudiante_id: estudianteId,
+                            materia_propuesta_id: id_materia
+                        },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        withCredentials: true
+                    });
+
+                    if (response.status === 200) {
+                        Swal.fire({
+                            title: "Eliminado",
+                            text: "El estudiante ha sido eliminado de la materia",
+                            icon: "success"
+                        });
+
+                        // Actualizar la lista de interesados
+                        getInteresados();
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: response.data.message || "No se pudo eliminar al estudiante",
+                            icon: "error"
+                        });
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error al eliminar estudiante:', error);
+
+            let mensajeError = "Ocurrió un error al eliminar al estudiante";
+
+            if (error.response) {
+                if (error.response.data) {
+                    if (typeof error.response.data === 'string') {
+                        mensajeError = error.response.data;
+                    } else if (error.response.data.message) {
+                        mensajeError = error.response.data.message;
+                    } else if (error.response.data.error) {
+                        mensajeError = error.response.data.error;
+                    } else if (error.response.data.detail) {
+                        mensajeError = error.response.data.detail;
+                    }
+                }
+            }
+
+            Swal.fire({
+                title: "Error",
+                text: mensajeError,
+                icon: "error"
+            });
+        }
+    };
+
+    // Función para añadir un alumno a la materia
+    const handleAddAlumno = async (e) => {
+        e.preventDefault();
+
+        if (!newEstudianteEmail) {
+            Swal.fire({
+                title: "Error",
+                text: "Por favor, ingresa el email del estudiante",
+                icon: "error"
+            });
+            return;
+        }
+
+        try {
+            setIsAddingAlumno(true);
+
+            const response = await axios({
+                method: 'post',
+                url: `${baseurl}/estudiante/inscribir/`,
+                data: {
+                    estudiante_id: newEstudianteEmail,
+                    materia_propuesta_id: id_materia
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                withCredentials: true
+            });
+
+            if (response.status === 200 || response.status === 201) {
+                Swal.fire({
+                    title: "Éxito",
+                    text: "Estudiante añadido correctamente",
+                    icon: "success"
+                });
+
+                // Limpiar el formulario y cerrar el modal
+                setNewEstudianteEmail('');
+                setAddAlumnoModalOpen(false);
+
+                // Actualizar la lista de interesados
+                getInteresados();
+            } else {
+                Swal.fire({
+                    title: "Error",
+                    text: response.data.message || "No se pudo añadir al estudiante",
+                    icon: "error"
+                });
+            }
+        } catch (error) {
+            console.error('Error al añadir estudiante:', error);
+
+            let mensajeError = "Ocurrió un error al añadir al estudiante";
+
+            if (error.response) {
+                if (error.response.data) {
+                    if (typeof error.response.data === 'string') {
+                        mensajeError = error.response.data;
+                    } else if (error.response.data.message) {
+                        mensajeError = error.response.data.message;
+                    } else if (error.response.data.error) {
+                        mensajeError = error.response.data.error;
+                    } else if (error.response.data.detail) {
+                        mensajeError = error.response.data.detail;
+                    }
+                }
+            }
+
+            Swal.fire({
+                title: "Error",
+                text: mensajeError,
+                icon: "error"
+            });
+        } finally {
+            setIsAddingAlumno(false);
+        }
+    };
 
     const handleInscribir = async (id_materia) => {
         try {
@@ -222,7 +431,7 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
                         <option value={profesor}> {profesor}</option>
 
                         {names.map(name => (
-                            <option value={name}>{name}</option>
+                            <option value={name} key={name}>{name}</option>
                         ))}
                     </select>
                 </div>
@@ -238,7 +447,7 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
     function handleButtons(id_materia) {
         return (
             <div className="flex justify-center gap-2">
-                {(canEdit ) ? (
+                {(canEdit) ? (
                     <>
                         <button
                             className="flex items-center gap-2 text-white bg-yellow-500 hover:bg-yellow-600 font-medium rounded-lg text-sm px-4 py-2.5 cursor-pointer"
@@ -254,6 +463,14 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
                         >
                             <FiTrash />
                             Borrar
+                        </button>
+
+                        <button
+                            className="flex items-center gap-2 text-white bg-blue-800 hover:bg-blue-900 font-medium rounded-lg text-sm px-4 py-2.5 cursor-pointer"
+                            onClick={getInteresados}
+                        >
+                            <MdGroupAdd />
+                            Ver interesados
                         </button>
 
                         {isEditable && (
@@ -317,7 +534,7 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
             </div>
         </div>
 
-        {/* Modal */}
+        {/* Modal de Información */}
         {isModalOpen && (
             <div className="fixed inset-0 flex items-center justify-center backdrop-brightness-20 z-50 shadow-xl">
                 <div className="bg-white rounded-lg p-6 w-full max-w-lg">
@@ -374,8 +591,7 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
                                 {estado}
                             </div>
 
-                            {/* Learn More Button */}
-
+                            {/* Botones */}
                             {handleButtons(id_materia)}
 
                         </div>
@@ -385,6 +601,149 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
 
                 </div>
             </div>)}
+
+        {/* Modal de Interesados */}
+        {isInteresadosModalOpen && (
+            <div className="fixed inset-0 flex items-center justify-center backdrop-brightness-20 z-50 shadow-xl">
+                <div className="bg-white rounded-lg p-6 w-full max-w-3xl">
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-2xl font-bold">Lista de interesados</h2>
+                        <button
+                            onClick={() => setIsInteresadosModalOpen(false)}
+                            className="text-gray-500 text-3xl hover:text-gray-700 cursor-pointer"
+                        >
+                            &times;
+                        </button>
+                    </div>
+
+                    {isLoadingInteresados ? (
+                        <div className="flex justify-center items-center h-40">
+                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--primary-color)]"></div>
+                        </div>
+                    ) : (
+                        <>
+                            {interesados.length > 0 ? (
+                                <div className="overflow-x-auto">
+                                    <table className="min-w-full bg-white">
+                                        <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                                        <tr>
+                                            <th className="py-3 px-6 text-left">Nombre</th>
+                                            <th className="py-3 px-6 text-left">Carrera</th>
+                                            <th className="py-3 px-6 text-left">Fecha de registro</th>
+                                            <th className="py-3 px-6 text-left">Acción</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody className="text-gray-600 text-sm">
+                                        {interesados.map((estudiante, index) => (
+                                            <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
+                                                <td className="py-3 px-6 text-left whitespace-nowrap">
+                                                    <div className="flex items-center">
+                                                        <div className="w-8 h-8 mr-3 rounded-full bg-gray-200 flex items-center justify-center">
+                                                            {estudiante.nombre ? estudiante.nombre.charAt(0).toUpperCase() : "U"}
+                                                        </div>
+                                                        <span>{estudiante.nombre || 'Usuario ' + (index + 1)}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="py-3 px-6 text-left">{estudiante.carrera || 'Sistemas Computacionales'}</td>
+                                                <td className="py-3 px-6 text-left">{estudiante.fecha_registro || ''}</td>
+                                                <td className="py-3 px-6 text-center">
+                                                    <button
+                                                        className="text-red-500 hover:text-red-700"
+                                                        title="Eliminar estudiante"
+                                                        onClick={() => handleEliminarEstudiante(estudiante.id || estudiante.estudiante_id)}
+                                                    >
+                                                        <FiTrash />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <div className="text-center py-10">
+                                    <p className="text-gray-500">No hay estudiantes interesados en esta materia.</p>
+                                </div>
+                            )}
+
+                            <div className="mt-6 flex justify-between">
+                                <button
+                                    className="flex items-center gap-2 text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm px-6 py-2.5"
+                                    onClick={() => setAddAlumnoModalOpen(true)}
+                                >
+                                    <MdGroupAdd className="w-5 h-5" />
+                                    Añadir alumno
+                                </button>
+                                <button
+                                    className="flex items-center gap-2 text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-6 py-2.5"
+                                    onClick={() => setIsInteresadosModalOpen(false)}
+                                >
+                                    Cerrar
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
+        )}
+
+        {/* Modal para añadir un alumno */}
+        {addAlumnoModalOpen && (
+            <div className="fixed inset-0 flex items-center justify-center backdrop-brightness-20 z-50 shadow-xl">
+                <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-bold">Añadir alumno</h2>
+                        <button
+                            onClick={() => setAddAlumnoModalOpen(false)}
+                            className="text-gray-500 text-3xl hover:text-gray-700 cursor-pointer"
+                        >
+                            &times;
+                        </button>
+                    </div>
+
+                    <form onSubmit={handleAddAlumno}>
+                        <div className="mb-4">
+                            <label htmlFor="estudianteEmail" className="block text-gray-700 text-sm font-bold mb-2">
+                                Email del estudiante:
+                            </label>
+                            <input
+                                type="email"
+                                id="estudianteEmail"
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                placeholder="correo@ejemplo.com"
+                                value={newEstudianteEmail}
+                                onChange={(e) => setNewEstudianteEmail(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <div className="flex justify-end">
+                            <button
+                                type="button"
+                                className="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-lg"
+                                onClick={() => setAddAlumnoModalOpen(false)}
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                type="submit"
+                                className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg"
+                                disabled={isAddingAlumno}
+                            >
+                                {isAddingAlumno ? (
+                                    <div className="flex items-center">
+                                        <div className="animate-spin h-4 w-4 mr-2 border-t-2 border-b-2 border-white rounded-full"></div>
+                                        Añadiendo...
+                                    </div>
+                                ) : (
+                                    'Añadir'
+                                )}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        )}
     </div>);
 }
 
