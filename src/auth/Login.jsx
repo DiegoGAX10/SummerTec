@@ -28,9 +28,9 @@ const Login = () => {
         const { access_token, user } = response.data;
 
         console.log(response.data);
-        localStorage.setItem("authToken", access_token); // <-- Store the token
-        localStorage.setItem("userEmail", user.email); // Optional: store user data
-        localStorage.setItem("userType", user.user_type); // Optional: store role
+        localStorage.setItem("authToken", access_token);
+        localStorage.setItem("userEmail", user.email);
+        localStorage.setItem("userType", user.role.toLowerCase());
         localStorage.setItem("full_name", user.nombre_completo)
         localStorage.setItem("role", user.role)
 
