@@ -1,32 +1,17 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tailwindcss from 'tailwindcss'
-import autoprefixer from 'autoprefixer'
+import tailwindcss from '@tailwindcss/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  esbuild: {
-    service: false
-  },
+  plugins: [react(), tailwindcss()],
   server: {
     host: '0.0.0.0',  // Permite conexiones externas
-    port: 5173,   // Puerto estándar de Vite
+    port: 5173,       // Puerto estándar de Vite
     watch: {
       usePolling: true  // Ayuda con la detección de cambios en Docker
     },
     strictPort: true,   // Evita que Vite cambie el puerto automáticamente
-  },
-  preview: {
-    host: '0.0.0.0',
-    port: 5173
-  },
-  css: {
-    postcss: {
-      plugins: [
-        tailwindcss,
-        autoprefixer,
-      ],
-    },
-  },
-  plugins: [react()],
+    allowedHosts: ['summertec.onrender.com'] // Agrega el host permitido en Render
+  }
 })
