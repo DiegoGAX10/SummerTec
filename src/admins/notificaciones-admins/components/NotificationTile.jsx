@@ -24,7 +24,8 @@ const typeConfig = {
     // Puedes seguir agregando más tipos aquí
 };
 
-export default function NotificationTile({ user, userType, type, time, group }) {
+export default function NotificationTile({ index, user, userType, type, time, group , count}) {
+
     const [showModal, setShowModal] = useState(false);
     const isMobile = useMediaQuery({ maxWidth: 767 }); // Tailwind's md breakpoint is 768px
     const config = typeConfig[type];
@@ -42,6 +43,8 @@ export default function NotificationTile({ user, userType, type, time, group }) 
     return (
         <>
             <div className="flex items-center justify-between bg-white rounded-xl shadow-md p-4">
+                <span className="text-red-700 font-bold mr-3">{index}</span>
+                <span className="text-gray-400 font-bold mr-3">{count}</span>
                 {/* Etiqueta */}
                 <span className={`text-sm px-3 py-1 rounded-full font-medium ${config.bg} ${config.text}`}>
                     {config.label}
