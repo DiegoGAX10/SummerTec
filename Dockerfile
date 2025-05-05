@@ -1,5 +1,5 @@
-# Usa una versión más reciente de Node
-FROM node:22
+# Usa la versión específica de Node.js
+FROM node:22.14.0
 
 WORKDIR /app
 
