@@ -33,8 +33,8 @@ const LoginAdmin = () => {
                 localStorage.setItem("full_name", user.nombre_completo);
                 localStorage.setItem("role", user.role);
 
-                // Verificar que sea un administrador
-                if (user.role.toLowerCase() !== "admin") {
+                // Verificar que sea un administrador o coordinador
+                if (user.role.toLowerCase() !== "admin" && user.role.toLowerCase() !== "coordinador") {
                     Swal.fire({
                         title: "Error",
                         text: "Esta cuenta no tiene privilegios de administrador",

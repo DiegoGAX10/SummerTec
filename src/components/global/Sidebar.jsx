@@ -14,7 +14,7 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout, userType }) => {
 
     const menuItems = [
         {
-            label: 'InicioEstudiantes',
+            label: 'Inicio',
             icon: <IoHome size={24} />,
             path: `/${userType}/inicio`,
             color: 'text-[var(--primary-color)]'

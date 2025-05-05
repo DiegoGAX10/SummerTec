@@ -6,7 +6,7 @@ import { FaBookOpen } from "react-icons/fa";
 
 export default function MisGrupos() {
     const token = localStorage.getItem('authToken');
-    const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+    const userEmail = localStorage.getItem('userEmail');
     const baseurl = import.meta.env.VITE_BASE_URL;
     const [materias, setMaterias] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -16,74 +16,20 @@ export default function MisGrupos() {
     const getMisGrupos = async () => {
         setLoading(true);
         try {
-            // Intentamos primero con el parámetro en la URL (método estándar para GET)
-            let response;
-            try {
-                response = await axios.get(
-                    `${baseurl}/estudiante/mis-grupos?estudiante_id=${userInfo.email}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
+            const response = await axios.get(
+                `${baseurl}/estudiante/mis-grupos`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        estudiante_id: userEmail
                     }
-                );
-            } catch (error) {
-                // Si falla, intentamos con el body (aunque no es lo estándar para GET)
-                console.log('Intentando método alternativo para GET con body...');
-                try {
-                    response = await axios({
-                        method: 'get',
-                        url: `${baseurl}/estudiante/mis-grupos`,
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        },
-                        data: { estudiante_id: userInfo.email }
-                    });
-                } catch (innerError) {
-                    // Si sigue fallando, intentamos con POST (aunque la ruta está definida como GET)
-                    console.log('Intentando con POST como último recurso...');
-                    response = await axios.post(
-                        `${baseurl}/estudiante/mis-grupos`,
-                        { estudiante_id: userInfo.email },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                                'Content-Type': 'application/json'
-                            }
-                        }
-                    );
                 }
-            }
-
-            console.log('Mis grupos recibidos:', response.data);
-
-            if (response.data && response.data.grupos) {
-                setMaterias(response.data.grupos);
-                setError(null);
-            } else if (response.data && response.data.error) {
-                setMaterias([]);
-                setError(response.data.error);
-            } else {
-                setMaterias([]);
-                setError('No se pudieron cargar tus grupos');
-            }
-
+            );
+            setMaterias(response.data || []);
+            setError(null);
         } catch (error) {
-            console.error('Error al obtener mis grupos:', error);
-            setMaterias([]);
-
-            if (error.response && error.response.data && error.response.data.error) {
-                setError(error.response.data.error);
-            } else {
-                setError('Error al conectar con el servidor');
-            }
-
-            Swal.fire({
-                title: "Error",
-                text: "No se pudieron obtener tus grupos inscritos.",
-                icon: "error",
-            });
+            console.error('Error al obtener los grupos:', error);
+            setError('No se pudieron cargar los grupos.');
         } finally {
             setLoading(false);
         }
@@ -91,13 +37,13 @@ export default function MisGrupos() {
 
     // useEffect para cargar datos iniciales
     useEffect(() => {
-        if (userInfo && userInfo.email) {
+        if (userEmail) {
             getMisGrupos();
         } else {
             setError('No se encontró información del usuario');
             setLoading(false);
         }
-    }, [userInfo.email]);
+    }, [userEmail]);
 
     // Función para darse de baja de un grupo
     const handleBaja = async (materiaId) => {
@@ -121,7 +67,7 @@ export default function MisGrupos() {
                                 'Content-Type': 'application/json'
                             },
                             data: {
-                                estudiante_id: userInfo.email,
+                                estudiante_id: userEmail,
                                 materia_propuesta_id: materiaId
                             }
                         }

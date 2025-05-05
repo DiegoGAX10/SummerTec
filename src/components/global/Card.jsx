@@ -1,4 +1,3 @@
-
 import { GraduationCap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { FiEdit, FiTrash } from 'react-icons/fi';
@@ -32,9 +31,9 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
     const baseurl = import.meta.env.VITE_BASE_URL;
     const names = Constants.names;
 
-    // Check if user can edit
+    // Check if user can edit or coordinator
     useEffect(() => {
-        if (userType === 'admin') {
+        if (userType === 'admin' || userType === 'coordinador') {
             setCanEdit(true);
         }
     }, [userType]);
@@ -780,7 +779,7 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
                                 type="email"
                                 id="estudianteEmail"
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                placeholder="correo@ejemplo.com"
+                                placeholder=""
                                 value={newEstudianteEmail}
                                 onChange={(e) => setNewEstudianteEmail(e.target.value)}
                                 required
