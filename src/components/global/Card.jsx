@@ -87,6 +87,7 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
                 },
                 withCredentials: true
             });
+            console.log('Interesados recibidos:', response.data);
 
             if (response.status === 200) {
                 setInteresados(response.data);
@@ -628,6 +629,7 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
                                         <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
                                         <tr>
                                             <th className="py-3 px-6 text-left">Nombre</th>
+                                            <th className="py-3 px-6 text-left">Email</th>
                                             <th className="py-3 px-6 text-left">Carrera</th>
                                             <th className="py-3 px-6 text-left">Fecha de registro</th>
                                             <th className="py-3 px-6 text-left">Acción</th>
@@ -636,21 +638,15 @@ function Card({nombre, aula, horas_semanales, creditos, horario, profesor, cupo,
                                         <tbody className="text-gray-600 text-sm">
                                         {interesados.map((estudiante, index) => (
                                             <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
-                                                <td className="py-3 px-6 text-left whitespace-nowrap">
-                                                    <div className="flex items-center">
-                                                        <div className="w-8 h-8 mr-3 rounded-full bg-gray-200 flex items-center justify-center">
-                                                            {estudiante.nombre ? estudiante.nombre.charAt(0).toUpperCase() : "U"}
-                                                        </div>
-                                                        <span>{estudiante.nombre || 'Usuario ' + (index + 1)}</span>
-                                                    </div>
-                                                </td>
-                                                <td className="py-3 px-6 text-left">{estudiante.carrera || 'Sistemas Computacionales'}</td>
-                                                <td className="py-3 px-6 text-left">{estudiante.fecha_registro || ''}</td>
+                                                <th className="py-3 px-6 text-left">{estudiante.nombre_completo}</th>
+                                                <th className="py-3 px-6 text-left">{estudiante.email} </th>
+                                                <th className="py-3 px-6 text-left">{estudiante.carrera}</th>
+                                                <td className="py-3 px-6 text-left">{estudiante.fecha_inscripcion}</td>
                                                 <td className="py-3 px-6 text-center">
                                                     <button
                                                         className="text-red-500 hover:text-red-700"
                                                         title="Eliminar estudiante"
-                                                        onClick={() => handleEliminarEstudiante(estudiante.id || estudiante.estudiante_id)}
+                                                        onClick={() => handleEliminarEstudiante(estudiante.email )}
                                                     >
                                                         <FiTrash />
                                                     </button>
