@@ -41,7 +41,7 @@ export const SobreNosotros = () => {
         </div>
     );
 };
-
+/*
 // Privacy Policy Page
 export const PrivacyPolicy = () => {
     return (
@@ -106,7 +106,7 @@ export const PrivacyPolicy = () => {
         </div>
     );
 };
-
+*/
 // Our Mission Page
 export const OurMission = () => {
     return (
