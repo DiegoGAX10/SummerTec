@@ -15,6 +15,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+.slick-prev:before,
+.slick-next:before {
+  color: black !important;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
