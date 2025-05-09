@@ -4,10 +4,15 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const LoginEstudiante = () => {
-  const [controlNumber, setControlNumber] = useState("");
-  const [password, setPassword] = useState("");
+
+
   const navigate = useNavigate();
   const baseurl = import.meta.env.VITE_BASE_URL;
+
+
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+
 
   const generateEmailEstudiante = (controlNumber) => {
     return `L${controlNumber}@zacatepec.tecnm.mx`;
@@ -15,70 +20,41 @@ const LoginEstudiante = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
+
     try {
-      const email = generateEmailEstudiante(controlNumber);
+      const isStudent = /^\d+$/.test(identifier); // Checks if it's all digits
+      const email = isStudent ? generateEmailEstudiante(identifier) : identifier;
 
       const response = await axios.post(`${baseurl}/auth/login`, {
         email: email,
         password: password,
       });
 
-      if (response.status === 200) {
-        const { access_token, user } = response.data;
+      const { access_token, user } = response.data;
 
-        console.log(response.data);
-        localStorage.setItem("authToken", access_token);
-        localStorage.setItem("userEmail", user.email);
-        localStorage.setItem("userType", user.role.toLowerCase());
-        localStorage.setItem("full_name", user.nombre_completo);
-        localStorage.setItem("role", user.role);
+      localStorage.setItem("authToken", access_token);
+      localStorage.setItem("userEmail", user.email);
+      localStorage.setItem("userType", user.role.toLowerCase());
+      localStorage.setItem("full_name", user.nombre_completo);
+      localStorage.setItem("role", user.role);
+      console.log(response.data);
 
-        // Verificar que sea un estudiante
-        if (user.role.toLowerCase() !== "estudiante") {
-          Swal.fire({
-            title: "Error",
-            text: "Esta cuenta no pertenece a un estudiante",
-            icon: "error",
-          });
-          return;
-        }
 
-        Swal.fire({
-          title: "Sesión Iniciada",
-          text: `Bienvenido ${user.nombre_completo}`,
-          icon: "success",
-        });
-        navigate(`/estudiante`);
-      } else {
-        Swal.fire({
-          title: "Error",
-          text: "Error de autenticación. Intenta de nuevo.",
-          icon: "error",
-        });
-      }
+      Swal.fire({
+        title: "Sesión Iniciada",
+        text: `Bienvenido ${user.nombre_completo}`,
+        icon: "success",
+      });
+
+      navigate(isStudent ? `/estudiante` : `/admin`);
     } catch (error) {
-      console.error("Error en el inicio de sesión:", error);
-      if (error.response) {
-        if (error.response.status === 401) {
-          Swal.fire({
-            title: "Oh no!",
-            text: "Número de control o contraseña incorrectos",
-            icon: "error",
-          });
-        } else {
-          Swal.fire({
-            title: "Error",
-            text: `Error en el servidor: ${error.response.status}`,
-            icon: "error",
-          });
-        }
-      } else {
-        Swal.fire({
-          title: "Error",
-          text: "Ocurrió un error en el servidor",
-          icon: "error",
-        });
-      }
+
+
+      Swal.fire({
+        title: "Error",
+        text: "Credenciales incorrectas",
+        icon: "error",
+      });
     }
   };
 
@@ -90,42 +66,53 @@ const LoginEstudiante = () => {
           <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold text-gray-900 md:text-2xl">
-                Acceso Estudiantes
+                Ingresa tus credenciales
               </h1>
               <form className="space-y-4 md:space-y-6" onSubmit={handleLogin}>
                 <div>
                   <label
-                      htmlFor="controlNumber"
+                      htmlFor="identifier"
                       className="block mb-2 text-sm font-medium text-gray-900"
                   >
-                    Número de control
+                    Correo o Número de Control
                   </label>
                   <input
                       type="text"
-                      id="controlNumber"
+                      id="identifier"
                       className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
-                      value={controlNumber}
-                      onChange={(e) => setControlNumber(e.target.value)}
+                      value={identifier}
+                      onChange={(e) => setIdentifier(e.target.value)}
                       required
                   />
+
                 </div>
 
-                <div>
-                  <label
-                      htmlFor="password"
-                      className="block mb-2 text-sm font-medium text-gray-900"
-                  >
-                    Contraseña
-                  </label>
-                  <input
-                      type="password"
-                      id="password"
-                      placeholder="••••••••"
-                      className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                  />
+                <div className="flex flex-col space-y-2">
+                 <div>
+                   <label
+                       htmlFor="password"
+                       className="block mb-2 text-sm font-medium text-gray-900"
+                   >
+                     Contraseña
+                   </label>
+                   <input
+                       type="password"
+                       id="password"
+                       placeholder="••••••••"
+                       className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
+                       value={password}
+                       onChange={(e) => setPassword(e.target.value)}
+                       required
+                   />
+
+                 </div>
+
+                  <div className="flex flex-row justify-end items-end ">
+                    <a href="/recover-password" className="text-sm text-blue-600 hover:underline">
+                      ¿Olvidaste tu contraseña?
+                    </a>
+                  </div>
+
                 </div>
 
                 <button
@@ -140,16 +127,17 @@ const LoginEstudiante = () => {
                     Regístrate aquí
                   </a>
                 </p>
-                <p className="text-sm text-gray-500 text-center">
-                  <a href="/login-admin" className="text-blue-600 hover:underline">
-                    Acceso para Administradores
-                  </a>
-                </p>
+
               </form>
+
             </div>
           </div>
+
         </div>
+
       </section>
+
+
   );
 };
 
