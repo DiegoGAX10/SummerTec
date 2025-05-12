@@ -19,8 +19,9 @@ const MateriasGrid = ({ materias, esMiGrupo = false, onBaja = () => {} }) => {
                     profesor={curso.profesor || "MISSING VALUE"}
                     cupo={curso.cupo || "MISSING VALUE"}
                     id_materia={curso.id_materia}
+                    id_materia_propuesta={curso.id_materia}
                     esMiGrupo={esMiGrupo}
-                    onBaja={onBaja}
+                    onBaja={() => onBaja(curso.id_materia_propuesta)}
                 />
             ))}
         </div>

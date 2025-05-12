@@ -8,7 +8,6 @@ export default function MisGrupos() {
     const token = localStorage.getItem('authToken');
     const userEmail = localStorage.getItem('userEmail');
     const baseurl = import.meta.env.VITE_BASE_URL;
-    const [materias, setMaterias] = useState([]);
     const [materiasFiltradas, setMateriasFiltradas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -16,9 +15,6 @@ export default function MisGrupos() {
     const getMisGrupos = async () => {
         setLoading(true);
         try {
-            console.log('Obteniendo grupos para:', userEmail);
-
-            // Enviamos el estudiante_id tanto en headers como en parámetros de URL para mayor compatibilidad
             const response = await axios.get(
                 `${baseurl}/estudiante/mis-grupos?estudiante_id=${encodeURIComponent(userEmail)}`,
                 {
@@ -30,27 +26,13 @@ export default function MisGrupos() {
                 }
             );
 
-            console.log('Materias inscritas recibidas:', response.data);
-
-            // Asegurarse de que response.data sea un array
             const materiasData = Array.isArray(response.data) ? response.data : [];
-
-            setMaterias(materiasData);
             setMateriasFiltradas(materiasData);
             setError(null);
-
+            console.log("Materias cargadas:", materiasData);
         } catch (error) {
-            console.error('Error al obtener materias inscritas:', error);
-
-            // Mostrar detalles específicos del error para depuración
-            if (error.response) {
-                console.error('Error de respuesta:', error.response.data);
-                console.error('Estado HTTP:', error.response.status);
-            }
-
-            // Manejar el caso especial del error "No estas inscrito en esta materia"
+            console.error("Error al cargar materias:", error);
             if (error.response?.data?.error === "No estas inscrito en esta materia") {
-                setMaterias([]);
                 setMateriasFiltradas([]);
                 setError(error.response.data.error);
             } else {
@@ -66,7 +48,6 @@ export default function MisGrupos() {
         }
     };
 
-    // useEffect para cargar datos iniciales
     useEffect(() => {
         if (userEmail) {
             getMisGrupos();
@@ -76,56 +57,89 @@ export default function MisGrupos() {
         }
     }, [userEmail]);
 
-    // Función para darse de baja de un grupo
-    const handleBaja = async (materiaId) => {
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: "Te darás de baja de este grupo",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, darme de baja',
-            cancelButtonText: 'Cancelar'
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    const response = await axios.delete(
-                        `${baseurl}/estudiante/baja?estudiante_id=${encodeURIComponent(userEmail)}`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                                'Content-Type': 'application/json'
-                            },
-                            data: {
-                                estudiante_id: userEmail,
-                                materia_propuesta_id: materiaId
-                            }
-                        }
-                    );
+    const handleBaja = async (idMateriaPropuesta) => {
+        try {
+            // Aseguramos que tenemos el ID del estudiante
+            if (!userEmail) {
+                Swal.fire({
+                    title: "Error",
+                    text: "No se pudo identificar al estudiante. Por favor, inicie sesión nuevamente.",
+                    icon: "error"
+                });
+                return;
+            }
 
-                    if (response.data && response.data.message) {
-                        Swal.fire(
-                            '¡Baja exitosa!',
-                            'Te has dado de baja de este grupo correctamente.',
-                            'success'
-                        );
-                        // Actualizar la lista de materias
-                        getMisGrupos();
-                    }
-                } catch (error) {
-                    console.error('Error al darse de baja:', error);
-                    Swal.fire(
-                        'Error',
-                        error.response?.data?.error || 'No se pudo completar la baja',
-                        'error'
-                    );
+            console.log("Intentando dar de baja:", {
+                estudiante_id: userEmail,
+                materia_propuesta_id: idMateriaPropuesta
+            });
+
+            const result = await Swal.fire({
+                title: "¿Estás seguro?",
+                text: "Serás eliminado de esta materia",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar"
+            });
+
+            if (result.isConfirmed) {
+                const response = await axios({
+                    method: 'delete',
+                    url: `${baseurl}/estudiante/baja/`,
+                    data: {
+                        estudiante_id: userEmail,
+                        materia_propuesta_id: idMateriaPropuesta
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    withCredentials: true
+                });
+
+                if (response.status === 200) {
+                    Swal.fire({
+                        title: "Eliminado",
+                        text: "Has sido eliminado de la materia exitosamente",
+                        icon: "success"
+                    });
+
+                    getMisGrupos(); // Refresh the list
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: response.data.message || "No se pudo eliminar de la materia",
+                        icon: "error"
+                    });
                 }
             }
-        });
+        } catch (error) {
+            console.error("Error en la baja:", error);
+            let mensajeError = "Ocurrió un error al eliminar la inscripción";
+
+            if (error.response?.data) {
+                if (typeof error.response.data === 'string') {
+                    mensajeError = error.response.data;
+                } else if (error.response.data.message) {
+                    mensajeError = error.response.data.message;
+                } else if (error.response.data.error) {
+                    mensajeError = error.response.data.error;
+                } else if (error.response.data.detail) {
+                    mensajeError = error.response.data.detail;
+                }
+            }
+
+            Swal.fire({
+                title: "Error",
+                text: mensajeError,
+                icon: "error"
+            });
+        }
     };
 
-    // Función para manejar la actualización de datos
     const handleRefresh = () => {
         getMisGrupos();
     };
@@ -143,9 +157,6 @@ export default function MisGrupos() {
                     className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 flex items-center"
                     disabled={loading}
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 mr-1 ${loading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
                     {loading ? 'Cargando...' : 'Actualizar'}
                 </button>
             </div>
@@ -163,18 +174,14 @@ export default function MisGrupos() {
                     materias={materiasFiltradas}
                     esMiGrupo={true}
                     onBaja={handleBaja}
+                    estudianteId={userEmail}
                 />
             ) : (
                 <div className="bg-white rounded-lg shadow-md text-center py-16 px-6">
-                    <img
-                        src="/api/placeholder/150/150"
-                        alt="No grupos"
-                        className="mx-auto mb-4"
-                    />
                     <h2 className="text-xl font-semibold text-gray-800 mb-2">No tienes grupos inscritos</h2>
                     <p className="text-gray-600 mb-6">Aún no te has inscrito a ningún grupo de materias. Dirígete a la página principal para ver las materias disponibles.</p>
                     <a
-                        href="/estudiantes/inicio"
+                        href="/estudiante/inicio"
                         className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
                     >
                         Ver materias disponibles

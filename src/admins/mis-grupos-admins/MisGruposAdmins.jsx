@@ -77,52 +77,74 @@ export default function MisGrupos() {
     }, [userEmail]);
 
     // Función para darse de baja de un grupo
-    const handleBaja = async (materiaId) => {
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: "Te darás de baja de este grupo",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, darme de baja',
-            cancelButtonText: 'Cancelar'
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    const response = await axios.delete(
-                        `${baseurl}/estudiante/baja/`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                                'Content-Type': 'application/json'
-                            },
-                            data: {
-                                estudiante_id: userEmail,
-                                materia_propuesta_id: materiaId
-                            }
-                        }
-                    );
+    const handleBaja = async (estudianteId) => {
+        try {
+            const result = await Swal.fire({
+                title: "¿Estás seguro?",
+                text: "El estudiante será eliminado de esta materia",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar"
+            });
 
-                    if (response.data && response.data.message) {
-                        Swal.fire(
-                            '¡Baja exitosa!',
-                            'Te has dado de baja de este grupo correctamente.',
-                            'success'
-                        );
-                        // Actualizar la lista de materias
-                        getMisGrupos();
-                    }
-                } catch (error) {
-                    console.error('Error al darse de baja:', error);
-                    Swal.fire(
-                        'Error',
-                        error.response?.data?.error || 'No se pudo completar la baja',
-                        'error'
-                    );
+            if (result.isConfirmed) {
+                const response = await axios({
+                    method: 'delete',
+                    url: `${baseurl}/estudiante/baja/`,
+                    data: {
+                        estudiante_id: estudianteId,
+                        materia_propuesta_id: id_materia
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    withCredentials: true
+                });
+
+                if (response.status === 200) {
+                    Swal.fire({
+                        title: "Eliminado",
+                        text: "El estudiante ha sido eliminado de la materia",
+                        icon: "success"
+                    });
+
+                    // Update interested students list
+                    getInteresados();
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: response.data.message || "No se pudo eliminar al estudiante",
+                        icon: "error"
+                    });
                 }
             }
-        });
+        } catch (error) {
+            console.error('Error al eliminar estudiante:', error);
+
+            let mensajeError = "Ocurrió un error al eliminar al estudiante";
+
+            if (error.response?.data) {
+                if (typeof error.response.data === 'string') {
+                    mensajeError = error.response.data;
+                } else if (error.response.data.message) {
+                    mensajeError = error.response.data.message;
+                } else if (error.response.data.error) {
+                    mensajeError = error.response.data.error;
+                } else if (error.response.data.detail) {
+                    mensajeError = error.response.data.detail;
+                }
+            }
+
+            Swal.fire({
+                title: "Error",
+                text: mensajeError,
+                icon: "error"
+            });
+        }
     };
 
     // Función para manejar la actualización de datos

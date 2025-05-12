@@ -557,6 +557,14 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
                         className="flex items-center gap-2 text-white bg-blue-800 hover:bg-blue-900 font-medium rounded-lg text-sm px-4 py-2.5"
                         onClick={getInteresados}
                     >
+                        <FiTrash />
+                        Borrar
+                    </button>
+
+                    <button
+                        className="flex items-center gap-2 text-white bg-blue-800 hover:bg-blue-900 font-medium rounded-lg text-sm px-4 py-2.5"
+                        onClick={getInteresados}
+                    >
                         <MdGroupAdd />
                         Ver interesados
                     </button>
