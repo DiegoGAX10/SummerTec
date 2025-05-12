@@ -9,27 +9,58 @@ export default function MisGrupos() {
     const userEmail = localStorage.getItem('userEmail');
     const baseurl = import.meta.env.VITE_BASE_URL;
     const [materias, setMaterias] = useState([]);
+    const [materiasFiltradas, setMateriasFiltradas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Función para obtener mis grupos inscritos
     const getMisGrupos = async () => {
         setLoading(true);
         try {
+            console.log('Obteniendo grupos para:', userEmail);
+
+            // Enviamos el estudiante_id tanto en headers como en parámetros de URL para mayor compatibilidad
             const response = await axios.get(
-                `${baseurl}/estudiante/mis-grupos`,
+                `${baseurl}/estudiante/mis-grupos?estudiante_id=${encodeURIComponent(userEmail)}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        estudiante_id: userEmail
+                        'estudiante_id': userEmail,
+                        'Content-Type': 'application/json'
                     }
                 }
             );
-            setMaterias(response.data || []);
+
+            console.log('Materias inscritas recibidas:', response.data);
+
+            // Asegurarse de que response.data sea un array
+            const materiasData = Array.isArray(response.data) ? response.data : [];
+
+            setMaterias(materiasData);
+            setMateriasFiltradas(materiasData);
             setError(null);
+
         } catch (error) {
-            console.error('Error al obtener los grupos:', error);
-            setError('No se pudieron cargar los grupos.');
+            console.error('Error al obtener materias inscritas:', error);
+
+            // Mostrar detalles específicos del error para depuración
+            if (error.response) {
+                console.error('Error de respuesta:', error.response.data);
+                console.error('Estado HTTP:', error.response.status);
+            }
+
+            // Manejar el caso especial del error "No estas inscrito en esta materia"
+            if (error.response?.data?.error === "No estas inscrito en esta materia") {
+                setMaterias([]);
+                setMateriasFiltradas([]);
+                setError(error.response.data.error);
+            } else {
+                setError('No se pudieron cargar las materias: ' + (error.response?.data?.error || error.message));
+                Swal.fire({
+                    title: "Error",
+                    text: "No se pudieron obtener las materias inscritas.",
+                    icon: "error",
+                });
+            }
         } finally {
             setLoading(false);
         }
@@ -60,7 +91,7 @@ export default function MisGrupos() {
             if (result.isConfirmed) {
                 try {
                     const response = await axios.delete(
-                        `${baseurl}/estudiante/baja/`,
+                        `${baseurl}/estudiante/baja?estudiante_id=${encodeURIComponent(userEmail)}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${token}`,
@@ -127,10 +158,10 @@ export default function MisGrupos() {
                 <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
                     <p>{error}</p>
                 </div>
-            ) : materias.length > 0 ? (
+            ) : materiasFiltradas.length > 0 ? (
                 <MateriasGrid
-                    materias={materias}
-                    showButtonActions={true}
+                    materias={materiasFiltradas}
+                    esMiGrupo={true}
                     onBaja={handleBaja}
                 />
             ) : (

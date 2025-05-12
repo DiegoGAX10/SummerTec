@@ -6,7 +6,8 @@ import Swal from "sweetalert2";
 import Constants from "../../utils/constants/Constants.jsx";
 import axios from "axios";
 
-function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo, estado, id_materia }) {
+function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo, estado, id_materia, esMiGrupo = false, onBaja }) {
+
     // State management
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isInteresadosModalOpen, setIsInteresadosModalOpen] = useState(false);
@@ -533,44 +534,59 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
 
     // Render action buttons
     const renderButtons = () => {
-        return (
-            <div className="flex justify-center gap-2 flex-wrap">
-                {canEdit ? (
-                    <>
-                        <button
-                            className="flex items-center gap-2 text-white bg-yellow-500 hover:bg-yellow-600 font-medium rounded-lg text-sm px-4 py-2.5"
-                            onClick={() => setIsEditable(prev => !prev)}
-                        >
-                            <FiEdit />
-                            {isEditable ? 'Cancelar' : 'Editar'}
-                        </button>
+        if (canEdit) {
+            return (
+                <div className="flex justify-center gap-2 flex-wrap">
+                    <button
+                        className="flex items-center gap-2 text-white bg-yellow-500 hover:bg-yellow-600 font-medium rounded-lg text-sm px-4 py-2.5"
+                        onClick={() => setIsEditable(prev => !prev)}
+                    >
+                        <FiEdit />
+                        {isEditable ? 'Cancelar' : 'Editar'}
+                    </button>
 
-                        <button
-                            className="flex items-center gap-2 text-white bg-red-800 hover:bg-red-900 font-medium rounded-lg text-sm px-4 py-2.5"
-                            onClick={handleDelete}
-                        >
-                            <FiTrash />
-                            Borrar
-                        </button>
+                    <button
+                        className="flex items-center gap-2 text-white bg-red-800 hover:bg-red-900 font-medium rounded-lg text-sm px-4 py-2.5"
+                        onClick={handleDelete}
+                    >
+                        <FiTrash />
+                        Borrar
+                    </button>
 
-                        <button
-                            className="flex items-center gap-2 text-white bg-blue-800 hover:bg-blue-900 font-medium rounded-lg text-sm px-4 py-2.5"
-                            onClick={getInteresados}
-                        >
-                            <MdGroupAdd />
-                            Ver interesados
-                        </button>
+                    <button
+                        className="flex items-center gap-2 text-white bg-blue-800 hover:bg-blue-900 font-medium rounded-lg text-sm px-4 py-2.5"
+                        onClick={getInteresados}
+                    >
+                        <MdGroupAdd />
+                        Ver interesados
+                    </button>
 
-                        {isEditable && (
-                            <button
-                                onClick={handleSaveChanges}
-                                className="flex items-center gap-2 text-white bg-green-800 hover:bg-green-900 font-medium rounded-lg text-sm px-4 py-2.5"
-                            >
-                                Guardar
-                            </button>
-                        )}
-                    </>
-                ) : (
+                    {isEditable && (
+                        <button
+                            onClick={handleSaveChanges}
+                            className="flex items-center gap-2 text-white bg-green-800 hover:bg-green-900 font-medium rounded-lg text-sm px-4 py-2.5"
+                        >
+                            Guardar
+                        </button>
+                    )}
+                </div>
+            );
+        } else if (esMiGrupo) {
+            return (
+                <div className="flex justify-center">
+                    <button
+                        type="button"
+                        className="flex items-center gap-2 text-white bg-red-600 hover:bg-red-700 font-medium rounded-lg text-sm px-4 py-2.5"
+                        onClick={() => onBaja?.(id_materia)}
+                    >
+                        <FiTrash />
+                        Darse de baja
+                    </button>
+                </div>
+            );
+        } else {
+            return (
+                <div className="flex justify-center">
                     <button
                         type="button"
                         className="flex items-center gap-2 text-white bg-[var(--primary-color)] hover:bg-[#163560] font-medium rounded-lg text-sm px-4 py-2.5"
@@ -578,10 +594,11 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
                     >
                         Solicitar unirme
                     </button>
-                )}
-            </div>
-        );
+                </div>
+            );
+        }
     };
+
 
     return (
         <div className="p-4 max-w-sm">
@@ -757,63 +774,63 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
 
 
             {/* Modal para añadir un alumno */}
-        {addAlumnoModalOpen && (
-            <div className="fixed inset-0 flex items-center justify-center backdrop-brightness-20 z-50 shadow-xl">
-                <div className="bg-white rounded-lg p-6 w-full max-w-md">
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-xl font-bold">Añadir alumno</h2>
-                        <button
-                            onClick={() => setAddAlumnoModalOpen(false)}
-                            className="text-gray-500 text-3xl hover:text-gray-700 cursor-pointer"
-                        >
-                            &times;
-                        </button>
-                    </div>
-
-                    <form onSubmit={handleAddAlumno}>
-                        <div className="mb-4">
-                            <label htmlFor="estudianteEmail" className="block text-gray-700 text-sm font-bold mb-2">
-                                Email del estudiante:
-                            </label>
-                            <input
-                                type="email"
-                                id="estudianteEmail"
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                placeholder=""
-                                value={newEstudianteEmail}
-                                onChange={(e) => setNewEstudianteEmail(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        <div className="flex justify-end">
+            {addAlumnoModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center backdrop-brightness-20 z-50 shadow-xl">
+                    <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-bold">Añadir alumno</h2>
                             <button
-                                type="button"
-                                className="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-lg"
                                 onClick={() => setAddAlumnoModalOpen(false)}
+                                className="text-gray-500 text-3xl hover:text-gray-700 cursor-pointer"
                             >
-                                Cancelar
-                            </button>
-                            <button
-                                type="submit"
-                                className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg"
-                                disabled={isAddingAlumno}
-                            >
-                                {isAddingAlumno ? (
-                                    <div className="flex items-center">
-                                        <div className="animate-spin h-4 w-4 mr-2 border-t-2 border-b-2 border-white rounded-full"></div>
-                                        Añadiendo...
-                                    </div>
-                                ) : (
-                                    'Añadir'
-                                )}
+                                &times;
                             </button>
                         </div>
-                    </form>
+
+                        <form onSubmit={handleAddAlumno}>
+                            <div className="mb-4">
+                                <label htmlFor="estudianteEmail" className="block text-gray-700 text-sm font-bold mb-2">
+                                    Email del estudiante:
+                                </label>
+                                <input
+                                    type="email"
+                                    id="estudianteEmail"
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    placeholder=""
+                                    value={newEstudianteEmail}
+                                    onChange={(e) => setNewEstudianteEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+
+                            <div className="flex justify-end">
+                                <button
+                                    type="button"
+                                    className="mr-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-lg"
+                                    onClick={() => setAddAlumnoModalOpen(false)}
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg"
+                                    disabled={isAddingAlumno}
+                                >
+                                    {isAddingAlumno ? (
+                                        <div className="flex items-center">
+                                            <div className="animate-spin h-4 w-4 mr-2 border-t-2 border-b-2 border-white rounded-full"></div>
+                                            Añadiendo...
+                                        </div>
+                                    ) : (
+                                        'Añadir'
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        )}
-    </div>);
+            )}
+        </div>);
 }
 
 export default Card;

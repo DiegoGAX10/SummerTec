@@ -2,22 +2,25 @@
 import Card from './Card.jsx';
 
 
-const MateriasGrid = ({materias}) => {
+const MateriasGrid = ({ materias, esMiGrupo = false, onBaja = () => {} }) => {
+
 
     return (
         <div className="flex flex-wrap justify-center mt-10">
             {materias.map((curso, index) => (
                 <Card
                     key={index}
-                    nombre={curso.nombre_materia || "MISSING VALUE"} // Correct field for the name
+                    nombre={curso.nombre_materia || "MISSING VALUE"}
                     aula={curso.aula || "SIN ASIGNAR"}
                     estado={curso.status || "MISSING VALUE"}
-                    horas_semanales={curso.horas_semana || "MISSING VALUE"} // Correct field
-                    creditos={curso.creditos || "MISSING VALUE"} // Correct field
-                    horario={curso.turno || "MISSING VALUE"} // Assuming 'horario' is not part of the data structure
-                    profesor={curso.profesor || "MISSING VALUE"} // Correct field
-                    cupo={curso.cupo || "MISSING VALUE"} // Correct field
+                    horas_semanales={curso.horas_semana || "MISSING VALUE"}
+                    creditos={curso.creditos || "MISSING VALUE"}
+                    horario={curso.turno || "MISSING VALUE"}
+                    profesor={curso.profesor || "MISSING VALUE"}
+                    cupo={curso.cupo || "MISSING VALUE"}
                     id_materia={curso.id_materia}
+                    esMiGrupo={esMiGrupo}
+                    onBaja={onBaja}
                 />
             ))}
         </div>
