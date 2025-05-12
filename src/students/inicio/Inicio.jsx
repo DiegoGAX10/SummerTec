@@ -2,7 +2,7 @@ import Card from './components/Card.jsx';
 import data from "./data.json";
 function Inicio() {
 
-
+    
     return (
         <div>
             <button

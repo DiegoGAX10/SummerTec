@@ -1,0 +1,32 @@
+{
+  "grupos": [
+    {
+      "materia": {
+        "nombre": "Taller de base de datos",
+        "creditos": 4,
+        "horas": 3,
+        "clave": "Clave2",
+        "idcarrera": "ISC",
+        "tronco_comun": false
+      },
+      "turno": "Matutino",
+      "trabajaLocal": "Si",
+      "profesor": "Alejandro",
+      "correoProfesor": "N/A"
+    },
+    {
+      "materia": {
+        "nombre": "ADMIN DE BD",
+        "creditos": 5,
+        "horas": 3,
+        "clave": "Clave3",
+        "idcarrera": "ISC",
+        "tronco_comun": false
+      },
+      "turno": "Matutino",
+      "trabajaLocal": "Si",
+      "profesor": "Alejandro",
+      "correoProfesor": "N/A"
+    }
+  ]
+}

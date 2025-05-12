@@ -1,0 +1,37 @@
+{
+    "edificios": [
+      {
+        "nombre": "Edificio 2",
+        "aulas": [
+          {"salon": 1},
+          {"salon": 2},
+          {"salon": 3},
+          {"salon": 4},
+          {"salon": 5},
+          {"salon": 6},
+          {"salon": 7},
+          {"salon": 8},
+          {"salon": 9},
+          {"salon": 10},
+          {"salon": 11},
+          {"salon": 12}
+        ]
+      },
+      {
+        "nombre": "Edificio 4",
+        "aulas": [
+          {"salon": 2},
+          {"salon": 3}
+        ]
+      },
+      {
+        "nombre": "Edificio 8",
+        "aulas": [
+          {"salon": 2},
+          {"salon": 3},
+          {"salon": 4},
+          {"salon": 5}
+        ]
+      }
+    ]
+  }

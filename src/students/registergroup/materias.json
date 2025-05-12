@@ -1,0 +1,41 @@
+{
+    "materias": [
+        {
+            "nombre": "Taller de base de datos",
+            "creditos": 6,
+            "horas": 120,
+            "clave": "Clave2",
+            "idcarrera":"ISC"
+        },
+        {
+            "nombre": "Sistemas operativos",
+            "creditos": 6,
+            "horas": 120,
+            "clave": "Clave4",
+            "idcarrera":"ISC"
+        },
+        {
+            "nombre": "Administracion de base de datos",
+            "creditos": 6,
+            "horas": 120,
+            "clave": "Clave3",
+            "idcarrera":"ISC"
+        },
+        {
+            "nombre": "Taller de sistemas operativos",
+            "creditos": 6,
+            "horas": 120,
+            "clave": "Clave1",
+            "idcarrera":"ISC"
+        },
+        {
+            "nombre": "Taller de investigación",
+            "creditos": 6,
+            "horas": 120,
+            "clave": "Clave4",
+            "idcarrera":"IA"
+        }
+
+
+    ]
+}

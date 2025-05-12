@@ -111,7 +111,6 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
                                 {/* Learn More Button */}
                                 <div className="flex justify-center">
                                     <button
-
                                         className="text-center text-white bg-[var(--primary-color)] hover:bg-blue-950  font-medium rounded-lg text-sm px-4 py-2.5  cursor-pointer"
                                     >
                                         Unirme

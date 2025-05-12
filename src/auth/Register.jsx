@@ -90,9 +90,9 @@ const Register = ({ navigation }) => {
                                     Número de control
                                 </label>
                                 <input type="text" name="controlNumber" id="controlNumber"
-                                       className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
-                                       value={numero_control} onChange={(e) => handleNumeroControl(e.target.value)} required
-                                       pattern="\d*" inputMode="numeric"
+                                    className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
+                                    value={numero_control} onChange={(e) => handleNumeroControl(e.target.value)} required
+                                    pattern="\d*" inputMode="numeric"
                                 />
                             </div>
                             <div>
@@ -100,9 +100,9 @@ const Register = ({ navigation }) => {
                                     Nombre completo
                                 </label>
                                 <input type="text" name="fullName" id="fullName"
-                                       className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
-                                       value={nombre_completo} onChange={(e) => setNombreCompleto(e.target.value)} required
-                                       pattern="^[A-Za-zÀ-ÿ\s]+$" title="Solo letras y espacios"
+                                    className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
+                                    value={nombre_completo} onChange={(e) => setNombreCompleto(e.target.value)} required
+                                    pattern="^[A-Za-zÀ-ÿ\s]+$" title="Solo letras y espacios"
                                 />
                             </div>
                             <div>
@@ -110,8 +110,8 @@ const Register = ({ navigation }) => {
                                     Contraseña
                                 </label>
                                 <input type="password" name="password" id="password" placeholder="••••••••"
-                                       className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
-                                       value={password} onChange={(e) => setPassword(e.target.value)} required
+                                    className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
+                                    value={password} onChange={(e) => setPassword(e.target.value)} required
                                 />
                             </div>
                             <div>
@@ -119,8 +119,8 @@ const Register = ({ navigation }) => {
                                     Confirma tu contraseña
                                 </label>
                                 <input type="password" name="confirmPassword" id="confirmPassword" placeholder="••••••••"
-                                       className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
-                                       value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required
+                                    className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
+                                    value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required
                                 />
                             </div>
                             <div>
@@ -128,34 +128,42 @@ const Register = ({ navigation }) => {
                                     Número de teléfono
                                 </label>
                                 <input type="text" name="phoneNumber" id="phoneNumber"
-                                       className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
-                                       value={phone_number} onChange={(e) => setPhoneNumber(e.target.value)} required
-                                       pattern="\d*" inputMode="numeric"
+                                    className="bg-gray-50 border text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5"
+                                    value={phone_number} onChange={(e) => setPhoneNumber(e.target.value)} required
+                                    pattern="\d*" inputMode="numeric"
                                 />
                             </div>
                             <div className="flex items-start">
                                 <div className="flex items-center h-5">
                                     <input id="terms" aria-describedby="terms" type="checkbox"
-                                           className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
-                                           required
+                                        className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
+                                        required
                                     />
                                 </div>
                                 <div className="ml-3 text-sm">
                                     <label htmlFor="terms" className="font-light text-gray-500">
                                         Acepto los <a className="font-medium text-primary-600 hover:underline" href="#">
-                                        Términos y Condiciones</a>
+                                            Términos y Condiciones</a>
                                     </label>
                                 </div>
                             </div>
                             <button type="submit"
-                                    className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
+                                className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
                                 Crear cuenta
                             </button>
                             <p className="text-sm text-gray-500">
                                 ¿Ya tienes una cuenta? <a href="/login" className="text-blue-600 hover:underline">
-                                Inicia sesión</a>
+                                    Inicia sesión</a>
                             </p>
                         </form>
+                        <p className="text-sm text-gray-500">
+                            Formulario registro <a href="/Asignargrupo" className="text-blue-600 hover:underline">
+                                Registro grupo</a>
+                        </p>
+                        <p className="text-sm text-gray-500">
+                            Formulario grupo <a href="/horarios" className="text-blue-600 hover:underline">
+                                Asignar grupo</a>
+                        </p>
                     </div>
                 </div>
             </div>
