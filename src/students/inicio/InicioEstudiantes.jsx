@@ -79,11 +79,11 @@ function InicioEstudiantes() {
     // Función para obtener los créditos únicos de las materias
     const getCreditos = async () => {
         try {
-            const response = await axios.get(`${baseurl}/materias/creditos_disponibles`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+                const response = await axios.get(`${baseurl}/materias/creditos_disponibles`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
 
             console.log('Créditos recibidos:', response.data);
             // Transformamos la respuesta al formato necesario para el Dropdown
