@@ -3,39 +3,31 @@ import MateriasGrid from './../../components/global/MateriasGrid.jsx';
 import Toggle from "../../admins/inicio-admins/components/Toggle.jsx";
 import SearchBox from "../../components/global/SearchBox.jsx";
 
-
-import {HiOfficeBuilding} from "react-icons/hi"; // Import your desired icon
+import {HiOfficeBuilding} from "react-icons/hi";
 import {PiDotsThreeFill} from "react-icons/pi";
 import { SlChemistry } from "react-icons/sl";
 
-
-
 import Dropdown from "../../components/global/Dropdown.jsx";
 import axios from "axios";
-import Swal from "sweetalert2"; // Adjust the import path as necessary
-
-
-
+import Swal from "sweetalert2";
 
 import Constants from "../../utils/constants/Constants.jsx";
 
-
-
 export default function InicioAdmins() {
-
-
     const baseurl = import.meta.env.VITE_BASE_URL;
-
-    const handleSelect = (item) => {
-        console.log('Selected item:', item);
-        // Handle the selected item (e.g., navigate, filter data, etc.)
-    };
-
-    const [materias, setMaterias] = useState([]);
-
     const token = localStorage.getItem('authToken');
 
-// Function to fetch materias
+    // States for materials and filtering
+    const [materias, setMaterias] = useState([]);
+    const [filteredMaterias, setFilteredMaterias] = useState([]);
+
+    // Filter states
+    const [carreraFilter, setCarreraFilter] = useState(null);
+    const [edificioFilter, setEdificioFilter] = useState(null);
+    const [creditosFilter, setCreditosFilter] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    // Function to fetch materias
     const getMaterias = async () => {
         try {
             const response = await axios.get(`${baseurl}/materias_propuestas/materias_propuestas`, {
@@ -45,7 +37,8 @@ export default function InicioAdmins() {
             });
 
             console.log('Materias recibidas:', response.data);
-            setMaterias(response.data); // Set the fetched data to state
+            setMaterias(response.data);
+            setFilteredMaterias(response.data); // Initialize filtered materias with all materias
 
         } catch (error) {
             console.error('Error al obtener materias:', error);
@@ -57,14 +50,74 @@ export default function InicioAdmins() {
         }
     };
 
-// useEffect to fetch data when the component mounts
+    // Handle filter selection for each dropdown
+    const handleCarreraSelect = (item) => {
+        setCarreraFilter(item);
+    };
+
+    const handleEdificioSelect = (item) => {
+        setEdificioFilter(item);
+    };
+
+    const handleCreditosSelect = (item) => {
+        setCreditosFilter(item);
+    };
+
+    // Handle search input
+    const handleSearch = (term) => {
+        setSearchTerm(term);
+    };
+
+    // Apply filters whenever filter states change
     useEffect(() => {
-        getMaterias(); // Call the function to fetch materias
-    }, []); // Empty dependency array means this runs once when the component mounts
+        let result = materias;
 
+        // Apply career filter
+        if (carreraFilter) {
+            result = result.filter(materia =>
+                materia.clave_carrera === carreraFilter.clave
+            );
+        }
 
+        // Apply building filter
+        if (edificioFilter && edificioFilter.value) {
+            result = result.filter(materia =>
+                materia.edificio === edificioFilter.value
+            );
+        }
 
+        // Apply credits filter
+        if (creditosFilter && creditosFilter.value) {
+            result = result.filter(materia =>
+                materia.creditos === parseInt(creditosFilter.value)
+            );
+        }
 
+        // Apply search term filter
+        if (searchTerm) {
+            const term = searchTerm.toLowerCase();
+            result = result.filter(materia =>
+                materia.nombre_materia?.toLowerCase().includes(term) ||
+                materia.docente?.toLowerCase().includes(term) ||
+                materia.clave_materia?.toLowerCase().includes(term)
+            );
+        }
+
+        setFilteredMaterias(result);
+    }, [carreraFilter, edificioFilter, creditosFilter, searchTerm, materias]);
+
+    // Fetch data when component mounts
+    useEffect(() => {
+        getMaterias();
+    }, []);
+
+    // Function to clear all filters
+    const clearFilters = () => {
+        setCarreraFilter(null);
+        setEdificioFilter(null);
+        setCreditosFilter(null);
+        setSearchTerm('');
+    };
 
     return (
         <div>
@@ -92,41 +145,50 @@ export default function InicioAdmins() {
                 </div>
             </dialog>
 
-
-            <div className="flex  items-center flex-col">
+            <div className="flex items-center flex-col">
                 <Toggle/>
 
-                <SearchBox/>
+                <SearchBox onSearch={handleSearch} value={searchTerm} />
 
-                <div className="flex justify-around mb-3 w-full">
-                    <p className="text-lg font-bold">{materias.length} resultados</p>
+                <div className="flex justify-between mb-3 w-full px-4">
+                    <p className="text-lg font-bold">{filteredMaterias.length} resultados</p>
 
                     <div className="flex flex-row gap-4 justify-center items-center">
                         <p className="text-lg font-bold">Filtrar por: </p>
                         <Dropdown
                             buttonLabel="Carrera"
                             items={Constants.carreras}
-                            onSelect={handleSelect}
-
+                            onSelect={handleCarreraSelect}
                             buttonIcon={SlChemistry}
+                            selectedItem={carreraFilter}
                         />
                         <Dropdown
                             buttonLabel="Edificio"
                             items={Constants.edificios}
-                            onSelect={handleSelect}
-                            buttonIcon={HiOfficeBuilding
-                            }
-                        />              <Dropdown
-                        buttonLabel="Créditos"
-                        items={Constants.creditos}
-                        onSelect={handleSelect}
-                        buttonIcon={PiDotsThreeFill}
-                    />
+                            onSelect={handleEdificioSelect}
+                            buttonIcon={HiOfficeBuilding}
+                            selectedItem={edificioFilter}
+                        />
+                        <Dropdown
+                            buttonLabel="Créditos"
+                            items={Constants.creditos}
+                            onSelect={handleCreditosSelect}
+                            buttonIcon={PiDotsThreeFill}
+                            selectedItem={creditosFilter}
+                        />
+                        {(carreraFilter || edificioFilter || creditosFilter || searchTerm) && (
+                            <button
+                                onClick={clearFilters}
+                                className="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-300"
+                            >
+                                Limpiar filtros
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
 
-            <MateriasGrid materias={materias}/>
+            <MateriasGrid materias={filteredMaterias}/>
         </div>
     );
 }

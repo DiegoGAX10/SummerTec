@@ -1,35 +1,64 @@
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import React, { useState, useEffect, useRef } from 'react';
 
-export default function Dropdown({ buttonLabel, items, onSelect, buttonIcon: ButtonIcon }) {
+export default function Dropdown({ buttonLabel, items, onSelect, buttonIcon: Icon, selectedItem = null }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [dropdownRef]);
+
+    const handleItemClick = (item) => {
+        onSelect(item);
+        setIsOpen(false);
+    };
+
+    // Determine display label
+    const displayLabel = selectedItem ? (selectedItem.label || selectedItem.value) : buttonLabel;
+
     return (
-        <Menu as="div" className="relative inline-block text-left">
-            <div>
-                <MenuButton className="inline-flex items-center justify-center gap-x-1.5 rounded-md bg-[var(--neutral-gray)] hover:bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-xs ring-1 ring-gray-300 ring-inset">
-                    {ButtonIcon && <ButtonIcon className="h-5 w-5 text-white" />} {/* Render the button icon if provided */}
-                    {buttonLabel}
-                    <ChevronDownIcon aria-hidden="true" className="h-5 w-5 text-white" />
-                </MenuButton>
-            </div>
-
-            <MenuItems
-                transition
-                className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+        <div ref={dropdownRef} className="relative inline-block text-left">
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className={`inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 
+                  ${selectedItem ? 'bg-indigo-100 text-indigo-800' : 'bg-white text-gray-700'}`}
             >
-                <div className="py-1">
-                    {items.map((item, index) => (
-                        <MenuItem key={index}>
+                {Icon && <Icon className="mr-2 h-4 w-4" />}
+                {displayLabel}
+                <svg className="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+            </button>
+
+            {isOpen && (
+                <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                    <div className="py-1 max-h-60 overflow-y-auto" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                        {items.map((item, index) => (
                             <button
-                                type="button"
-                                onClick={() => onSelect(item)}
-                                className="block w-full px-4 py-2 text-left text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                                key={index}
+                                onClick={() => handleItemClick(item)}
+                                className={`block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 
+                                  ${selectedItem && (selectedItem.label === item.label || selectedItem.value === item.value)
+                                    ? 'bg-indigo-50 text-indigo-700'
+                                    : 'text-gray-700'}`}
+                                role="menuitem"
                             >
-                                {item.label}
+                                {item.label || item.value}
                             </button>
-                        </MenuItem>
-                    ))}
+                        ))}
+                    </div>
                 </div>
-            </MenuItems>
-        </Menu>
+            )}
+        </div>
     );
 }

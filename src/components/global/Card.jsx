@@ -30,7 +30,30 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
     const token = localStorage.getItem('authToken');
     const userType = localStorage.getItem('userType');
     const baseurl = import.meta.env.VITE_BASE_URL;
-    const names = Constants.names;
+
+    const [docentes, setDocentes] = useState([]);
+
+    useEffect(() => {
+        const fetchDocentes = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                const claveCarrera = localStorage.getItem('claveCarrera'); // Asumiendo que la tienes almacenada
+                const response = await axios.get(`${baseurl}/get_by_clave/${claveCarrera}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                    withCredentials: true,
+                });
+
+                if (response.status === 200) {
+                    setDocentes(response.data);
+                }
+            } catch (error) {
+                console.error("Error al cargar docentes:", error);
+            }
+        };
+
+        fetchDocentes();
+    }, []);
+
 
     // Check if user can edit or coordinator
     useEffect(() => {
@@ -61,7 +84,7 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
                 data: {
                     turno: formValues.turno,
                     cupo: formValues.cupo,
-                    docente: formValues.docente
+                    docente: formValues.docente // ahora es el email
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -69,6 +92,7 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
                 },
                 withCredentials: true
             });
+
 
             if (response.status === 200) {
                 Swal.fire({
@@ -511,9 +535,11 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
                     onChange={handleFormChange}
                     className="p-2 border rounded"
                 >
-                    <option value={profesor}>{profesor}</option>
-                    {names.map(name => (
-                        <option value={name} key={name}>{name}</option>
+                    <option value="">Seleccione un docente</option>
+                    {docentes.map(doc => (
+                        <option key={doc.email} value={doc.email}>
+                            {doc.nombre_completo}
+                        </option>
                     ))}
                 </select>
             </div>
@@ -548,14 +574,6 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
                     <button
                         className="flex items-center gap-2 text-white bg-red-800 hover:bg-red-900 font-medium rounded-lg text-sm px-4 py-2.5"
                         onClick={handleDelete}
-                    >
-                        <FiTrash />
-                        Borrar
-                    </button>
-
-                    <button
-                        className="flex items-center gap-2 text-white bg-blue-800 hover:bg-blue-900 font-medium rounded-lg text-sm px-4 py-2.5"
-                        onClick={getInteresados}
                     >
                         <FiTrash />
                         Borrar
