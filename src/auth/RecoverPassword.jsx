@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import {useNavigate} from "react-router-dom";
 
 const RecoverPassword = () => {
     const [identifier, setIdentifier] = useState("");
     const baseurl = import.meta.env.VITE_BASE_URL;
-
+    const navigate = useNavigate();
     const generateEmailEstudiante = (controlNumber) => {
         return `L${controlNumber}@zacatepec.tecnm.mx`;
     };
@@ -17,15 +18,26 @@ const RecoverPassword = () => {
             const isStudent = /^\d+$/.test(identifier);
             const email = isStudent ? generateEmailEstudiante(identifier) : identifier;
 
-            const response = await axios.post(`${baseurl}/auth/recover`, {
-                email: email,
+            console.log(email);
+
+
+            const response = await fetch(`${baseurl}/auth/recover-password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
             });
+
+            console.log(response);
 
             if (response.status === 200) {
                 Swal.fire({
                     title: "Correo Enviado",
                     text: "Revisa tu bandeja de entrada para restablecer tu contraseña.",
                     icon: "success",
+                }).then(()=>{
+                    navigate("/login");
                 });
             }
         } catch (error) {

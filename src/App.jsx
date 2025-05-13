@@ -27,7 +27,7 @@ function App() {
                 <Route path="/landing" element={<Landing/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/recover-password" element={<RecoverPassword/>}/>
-                <Route path="/change-password" element={<ChangePassword/>}/>
+                <Route path="/change-password/:tokenUrl" element={<ChangePassword/>}/>
                 <Route path="/register" element={<Register/>}/>
                 <Route path="/estudiante/*" element={<Students/>}/>
 
