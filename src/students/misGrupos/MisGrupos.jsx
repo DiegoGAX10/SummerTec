@@ -26,10 +26,30 @@ export default function MisGrupos() {
                 }
             );
 
+            // Get the data, ensuring it's an array
             const materiasData = Array.isArray(response.data) ? response.data : [];
-            setMateriasFiltradas(materiasData);
+
+            // Format the data to match the structure expected by MateriasGrid
+            // This transformation is critical to match the format used in InicioEstudiantes.jsx
+            const formattedMaterias = materiasData.map(materia => ({
+                horas_semana: materia.horas_semana,
+                creditos: typeof materia.creditos === 'string' ? parseInt(materia.creditos) : materia.creditos,
+                cupo: materia.cupo || 0,
+                turno: materia.turno,
+                id_materia: materia.id_materia_propuesta,
+                profesor: materia.profesor,
+                nombre_materia: materia.nombre_materia,
+                clave_materia: materia.clave_materia,
+                clave_carrera: materia.clave_carrera,
+                creado_por: materia.nombre_usuario, // Using nombre_usuario as creado_por
+                aula: null, // Add if available
+                edificio: materia.edificio,
+                status: materia.status
+            }));
+
+            setMateriasFiltradas(formattedMaterias);
             setError(null);
-            console.log("Materias cargadas:", materiasData);
+            console.log("Materias formateadas:", formattedMaterias);
         } catch (error) {
             console.error("Error al cargar materias:", error);
             if (error.response?.data?.error === "No estas inscrito en esta materia") {
