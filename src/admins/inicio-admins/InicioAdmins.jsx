@@ -20,6 +20,7 @@ export default function InicioAdmins() {
     // States for materials and filtering
     const [materias, setMaterias] = useState([]);
     const [filteredMaterias, setFilteredMaterias] = useState([]);
+    const [filterApplied, setFilterApplied] = useState(false);
 
     // Filter states
     const [carreraFilter, setCarreraFilter] = useState(null);
@@ -37,8 +38,18 @@ export default function InicioAdmins() {
             });
 
             console.log('Materias recibidas:', response.data);
-            setMaterias(response.data);
-            setFilteredMaterias(response.data); // Initialize filtered materias with all materias
+
+            // Ensure all data is properly formatted
+            const formattedMaterias = response.data.map(materia => ({
+                ...materia,
+                // Ensure creditos is a number
+                creditos: materia.creditos !== undefined ?
+                    (typeof materia.creditos === 'string' ? parseInt(materia.creditos) : materia.creditos)
+                    : null
+            }));
+
+            setMaterias(formattedMaterias);
+            setFilteredMaterias(formattedMaterias); // Initialize filtered materias with all materias
 
         } catch (error) {
             console.error('Error al obtener materias:', error);
@@ -53,19 +64,25 @@ export default function InicioAdmins() {
     // Handle filter selection for each dropdown
     const handleCarreraSelect = (item) => {
         setCarreraFilter(item);
+        setFilterApplied(true);
     };
 
     const handleEdificioSelect = (item) => {
         setEdificioFilter(item);
+        setFilterApplied(true);
     };
 
     const handleCreditosSelect = (item) => {
         setCreditosFilter(item);
+        setFilterApplied(true);
     };
 
     // Handle search input
     const handleSearch = (term) => {
         setSearchTerm(term);
+        if (term) {
+            setFilterApplied(true);
+        }
     };
 
     // Apply filters whenever filter states change
@@ -88,9 +105,27 @@ export default function InicioAdmins() {
 
         // Apply credits filter
         if (creditosFilter && creditosFilter.value) {
-            result = result.filter(materia =>
-                materia.creditos === parseInt(creditosFilter.value)
-            );
+            // Convert the filter value to a number
+            const creditsValue = parseInt(creditosFilter.value);
+
+            console.log('Filtering by credits:', creditsValue);
+
+            result = result.filter(materia => {
+                // Ensure we have valid data to compare
+                if (!materia.creditos && materia.creditos !== 0) {
+                    console.log('Materia without credits:', materia);
+                    return false;
+                }
+
+                // Convert materia.creditos to number if it's a string
+                const materiaCreditos = typeof materia.creditos === 'string'
+                    ? parseInt(materia.creditos)
+                    : materia.creditos;
+
+                console.log(`Comparing materia ${materia.nombre_materia} credits:`, materiaCreditos, '===', creditsValue);
+
+                return materiaCreditos === creditsValue;
+            });
         }
 
         // Apply search term filter
@@ -104,7 +139,17 @@ export default function InicioAdmins() {
         }
 
         setFilteredMaterias(result);
-    }, [carreraFilter, edificioFilter, creditosFilter, searchTerm, materias]);
+
+        // Check if filters are applied and no results found
+        if (filterApplied && result.length === 0) {
+            Swal.fire({
+                title: "Sin resultados",
+                text: "No se encontraron materias con los filtros aplicados.",
+                icon: "info",
+                confirmButtonText: "Entendido"
+            });
+        }
+    }, [carreraFilter, edificioFilter, creditosFilter, searchTerm, materias, filterApplied]);
 
     // Fetch data when component mounts
     useEffect(() => {
@@ -117,6 +162,7 @@ export default function InicioAdmins() {
         setEdificioFilter(null);
         setCreditosFilter(null);
         setSearchTerm('');
+        setFilterApplied(false);
     };
 
     return (

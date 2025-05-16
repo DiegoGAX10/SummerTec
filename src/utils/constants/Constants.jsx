@@ -11,36 +11,26 @@ class Constants {
         { label: 'Ingeniería en Turismo', clave: 'LTUR-2012-237' }
     ];
 
-
-
     static creditos = [
-        { label: 1 },
-        { label: 2 },
-        { label: 3 },
-        { label: 4 },
-        { label: 5 },
-        { label: 6 },
-        { label: 7 },
-        { label: 8 },
+        { label: "4 créditos", value: "4" },
+        { label: "5 créditos", value: "5" },
+        { label: "6 créditos", value: "6" },
     ];
 
     static edificios = [
-        { label: 1 },
-        { label: 2 },
-        { label: 3 },
-        { label: 4 },
-        { label: 5 },
-        { label: 6 },
-        { label: 7 },
-        { label: 8 },
-        { label: 9 },
-        { label: 10 },
+        { label: "Edificio 1", value: "1" },
+        { label: "Edificio 2", value: "2" },
+        { label: "Edificio 3", value: "3" },
+        { label: "Edificio 4", value: "4" },
+        { label: "Edificio 5", value: "5" },
+        { label: "Edificio 6", value: "6" },
+        { label: "Edificio 7", value: "7" },
+        { label: "Edificio 8", value: "8" },
+        { label: "Edificio 9", value: "9" },
+        { label: "Edificio 10", value: "10" },
     ];
 
     static names = ["Andrea Morales", "Carlos Gómez", "Lucía Fernández", "Diego Torres", "Valeria Ruiz"];
-
-
-
 }
 
 export default Constants;
