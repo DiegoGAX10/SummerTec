@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { MdGroups, MdAddBox, MdNotifications, MdSettings, MdLogout } from "react-icons/md";
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { IoHome } from "react-icons/io5";
+import { FaUserCircle } from "react-icons/fa";
 
 const Sidebar = ({ isOpen, toggleSidebar, handleLogout, userType }) => {
     const [userData, setUserData] = useState({ name: '', controlNumber: '' });
@@ -55,9 +56,29 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout, userType }) => {
     return (
         <div className={`fixed top-0 left-0 h-full bg-white text-[var(--primary-color)] shadow-xl transition-all duration-300 ease-in-out ${isOpen ? 'w-64' : 'w-20'}`}>
             {/* User Info */}
-            <div className="p-4 text-center border-b border-gray-200">
-                <h2 className="text-lg font-bold text-gray-800">{userData.name}</h2>
-                <p className="text-sm text-gray-600">{userData.controlNumber}</p>
+            <div className={`py-6 text-center border-b border-gray-200 transition-all duration-300 ${isOpen ? 'px-4' : 'px-2'}`}>
+                <div className="flex flex-col items-center">
+                    <div className="mb-3">
+                        <FaUserCircle size={isOpen ? 48 : 36} className="text-[var(--primary-color)]" />
+                    </div>
+                    {isOpen ? (
+                        <div>
+                            <h2 className="text-xl font-bold text-gray-800 mb-1 truncate">{userData.name}</h2>
+                            {userData.controlNumber && (
+                                <p className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">{userData.controlNumber}</p>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="tooltip relative group">
+                            <div className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full">
+                                <span className="text-xs font-bold">{userData.name.charAt(0)}</span>
+                            </div>
+                            <div className="tooltip-text absolute left-full ml-2 px-3 py-2 bg-gray-800 text-white text-sm rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200 whitespace-nowrap z-10">
+                                {userData.name}
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Toggle Button */}
