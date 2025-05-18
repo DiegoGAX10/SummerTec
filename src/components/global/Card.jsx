@@ -18,6 +18,7 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
     const [isAddingAlumno, setIsAddingAlumno] = useState(false);
     const [isEditable, setIsEditable] = useState(false);
     const [canEdit, setCanEdit] = useState(false);
+    const [inscritosCount, setInscritosCount] = useState(0);
 
     // Edited form values
     const [formValues, setFormValues] = useState({
@@ -52,8 +53,31 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
         };
 
         fetchDocentes();
+
+        // Cargar el conteo de estudiantes inscritos al iniciar el componente
+        fetchInscritosCount();
     }, []);
 
+    // Función para obtener el número de estudiantes inscritos
+    const fetchInscritosCount = async () => {
+        try {
+            const response = await axios({
+                method: 'get',
+                url: `${baseurl}/estudiante/inscritos/${id_materia}`,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                withCredentials: true
+            });
+
+            if (response.status === 200) {
+                setInscritosCount(response.data.length);
+            }
+        } catch (error) {
+            console.error('Error al obtener conteo de inscritos:', error);
+            setInscritosCount(0);
+        }
+    };
 
     // Check if user can edit or coordinator
     useEffect(() => {
@@ -198,6 +222,7 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
 
             if (response.status === 200) {
                 setInteresados(response.data);
+                setInscritosCount(response.data.length); // Actualizar conteo de inscritos
                 setIsInteresadosModalOpen(true);
             } else {
                 Swal.fire({
@@ -506,6 +531,12 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
             </p>
         );
     };
+
+    // Formatear número con ceros a la izquierda
+    const formatearNumero = (num) => {
+        return num.toString().padStart(2, '0');
+    };
+
     const renderCupo = () => {
         return (isEditable && canEdit) ? (
             <div className="flex flex-row gap-3">
@@ -517,10 +548,13 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
                     onChange={handleFormChange}
                     className="appearance-auto p-2 border rounded w-24"
                 />
+                <span className="text-gray-500 text-lg">
+                    (Actualmente: {formatearNumero(inscritosCount)}/{cupo})
+                </span>
             </div>
         ) : (
             <p className="text-gray-500 text-lg">
-                <span className="font-semibold">Cupo:</span> {cupo}
+                <span className="font-semibold">Cupo:</span> {formatearNumero(inscritosCount)}/{cupo}
             </p>
         );
     };
@@ -642,6 +676,12 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
                     </h3>
                 </div>
 
+                <div className="mt-2">
+                    <p className="text-gray-500 text-md">
+                        <span className="font-semibold">Cupo:</span> {formatearNumero(inscritosCount)}/{cupo}
+                    </p>
+                </div>
+
                 <div className="flex flex-col gap-3 flex-grow">
                     {/* Status */}
                     <div
@@ -717,7 +757,6 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
                     </div>
                 </div>
             )}
-
             {/* Interested Students Modal */}
             {isInteresadosModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center backdrop-brightness-20 z-50 shadow-xl">

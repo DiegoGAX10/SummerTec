@@ -1,10 +1,6 @@
-
 import Card from './Card.jsx';
 
-
 const MateriasGrid = ({ materias, esMiGrupo = false, onBaja = () => {} }) => {
-
-
     return (
         <div className="flex flex-wrap justify-center mt-10">
             {materias.map((curso, index) => (
@@ -19,9 +15,9 @@ const MateriasGrid = ({ materias, esMiGrupo = false, onBaja = () => {} }) => {
                     profesor={curso.profesor || "MISSING VALUE"}
                     cupo={curso.cupo || "MISSING VALUE"}
                     id_materia={curso.id_materia}
-                    id_materia_propuesta={curso.id_materia}
+                    id_materia_propuesta={curso.id_materia_propuesta || curso.id_materia}
                     esMiGrupo={esMiGrupo}
-                    onBaja={() => onBaja(curso.id_materia_propuesta)}
+                    onBaja={() => onBaja(curso.id_materia_propuesta || curso.id_materia)}
                 />
             ))}
         </div>
