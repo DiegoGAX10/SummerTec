@@ -82,7 +82,7 @@ export default function InicioAdmins() {
         setSearchTerm(term);
         if (term) {
             setFilterApplied(true);
-        }
+        }   
     };
 
     // Apply filters whenever filter states change

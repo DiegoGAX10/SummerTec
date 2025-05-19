@@ -11,9 +11,12 @@ export default function Toggle() {
         <input id="Toggle4" type="checkbox" className="hidden peer" />
         
         {/* Cuadrícula */}
-        <span className="flex items-center gap-2 px-4 py-2 text-[var(--primary-color)] bg-white peer-checked:bg-[var(--primary-color)] peer-checked:text-white transition-colors duration-300">
-          <FiGrid /> Cuadrícula
-        </span>
+          <span
+              onClick={() => (window.location.href = './horarios')}
+              className="flex items-center gap-2 px-4 py-2 text-[var(--primary-color)] bg-white peer-checked:bg-[var(--primary-color)] peer-checked:text-white transition-colors duration-300 cursor-pointer"
+          >
+  <FiGrid /> Cuadrícula
+</span>
 
         {/* Calendario */}
         <span className="flex items-center gap-2 px-4 py-2 text-white bg-[var(--primary-color)] peer-checked:bg-white peer-checked:text-[var(--primary-color)] transition-colors duration-300">

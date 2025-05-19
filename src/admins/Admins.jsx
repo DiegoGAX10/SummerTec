@@ -11,6 +11,9 @@ import Sidebar from "../components/global/Sidebar.jsx";
 import SolicitarGrupoAdmins from "./solicitar-grupo-admins/SolicitarGrupoAdmins.jsx";
 import NotificacionesAdmins from "./notificaciones-admins/NotificacionesAdmins.jsx";
 import AjustesAdmins from "./ajustes-admins/AjustesAdmins.jsx";
+import AsignarGrupo from "./asignargrupo.jsx"
+import Horarios from "./horarios.jsx";
+
 export default function Students() {
 
     const [isOpen, setIsOpen] = useState(false);
@@ -39,6 +42,8 @@ export default function Students() {
                 <Routes>
 
                     <Route path="/inicio" element={<InicioAdmins/>}/>
+                    <Route path="/asignargrupo" element={<AsignarGrupo/>}/>
+                    <Route path="/horarios" element={<Horarios/>}/>
                     <Route path="*" element={<Navigate to="inicio" replace/>}/>
                     <Route path="mis-grupos" element={<MisGruposAdmins />} />
                     <Route path="solicitar-grupo" element={<SolicitarGrupoAdmins />} />

@@ -1,0 +1,55 @@
+{
+  "horarios": [
+    {
+      "idHorario": 1,
+      "id_materiaPropuesta": "CLAVE-MATERIA",
+      "idAula": 2,
+      "hora_inicio": 7,
+      "hora_fin": 11,
+      "idEdificio": "Edificio 2",
+      "dia_semana": 1,
+      "nombre": "Taller de base de datos"
+    },
+    {
+      "idHorario": 2,
+      "id_materiaPropuesta": "CLAVE-MATERIA2",
+      "idAula": 1,
+      "hora_inicio": 12,
+      "hora_fin": 16,
+      "idEdificio": "Edificio 2",
+      "dia_semana": 1,
+      "nombre": "Sistemas"
+    },
+    {
+      "idHorario": 3,
+      "id_materiaPropuesta": "MCLAVE-MATERIA3",
+      "idAula": 3,
+      "hora_inicio": 7,
+      "hora_fin": 10,
+      "idEdificio": "Edificio 2",
+      "dia_semana": 1,
+      "nombre": "Fundamentos de base de base de datos"
+    },
+    {
+      "idHorario": 3,
+      "id_materiaPropuesta": "MCLAVE-MATERIA3",
+      "idAula": 8,
+      "hora_inicio": 7,
+      "hora_fin": 10,
+      "idEdificio": "Edificio 2",
+      "dia_semana": 1,
+      "nombre": "Fundamentos de base de base de datos"
+    }
+    ,
+    {
+      "idHorario": 3,
+      "id_materiaPropuesta": "MCLAVE-MATERIA3",
+      "idAula": 2,
+      "hora_inicio": 7,
+      "hora_fin": 10,
+      "idEdificio": "Edificio 4",
+      "dia_semana": 1,
+      "nombre": "Fundamentos de base de base de datos"
+    }
+  ]
+}
