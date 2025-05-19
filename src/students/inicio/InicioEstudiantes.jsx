@@ -5,13 +5,14 @@ import SearchBox from "../../components/global/SearchBox.jsx";
 
 import {HiOfficeBuilding} from "react-icons/hi";
 import {PiDotsThreeFill} from "react-icons/pi";
-import { SlChemistry } from "react-icons/sl";
+import {SlChemistry} from "react-icons/sl";
 
 import Dropdown from "../../components/global/Dropdown.jsx";
 import axios from "axios";
 import Swal from "sweetalert2";
 
 import Constants from "../../utils/constants/Constants.jsx";
+import LoadingSpinner from "../../components/LoadingSpinner.jsx";
 
 export default function InicioEstudiantes() {
     const baseurl = import.meta.env.VITE_BASE_URL;
@@ -22,6 +23,9 @@ export default function InicioEstudiantes() {
     const [filteredMaterias, setFilteredMaterias] = useState([]);
     const [filterApplied, setFilterApplied] = useState(false);
 
+
+    const [loading, setLoading] = useState(false); // Set to false initially
+
     // Filter states
     const [carreraFilter, setCarreraFilter] = useState(null);
     const [edificioFilter, setEdificioFilter] = useState(null);
@@ -31,6 +35,7 @@ export default function InicioEstudiantes() {
     // Function to fetch materias
     const getMaterias = async () => {
         try {
+            setLoading(true);
             const response = await axios.get(`${baseurl}/materias_propuestas/materias_propuestas`, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -41,11 +46,8 @@ export default function InicioEstudiantes() {
 
             // Ensure all data is properly formatted
             const formattedMaterias = response.data.map(materia => ({
-                ...materia,
-                // Ensure creditos is a number
-                creditos: materia.creditos !== undefined ?
-                    (typeof materia.creditos === 'string' ? parseInt(materia.creditos) : materia.creditos)
-                    : null
+                ...materia, // Ensure creditos is a number
+                creditos: materia.creditos !== undefined ? (typeof materia.creditos === 'string' ? parseInt(materia.creditos) : materia.creditos) : null
             }));
 
             setMaterias(formattedMaterias);
@@ -54,10 +56,10 @@ export default function InicioEstudiantes() {
         } catch (error) {
             console.error('Error al obtener materias:', error);
             Swal.fire({
-                title: "Error",
-                text: "No se pudieron obtener las materias.",
-                icon: "error",
+                title: "Error", text: "No se pudieron obtener las materias.", icon: "error",
             });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -91,16 +93,12 @@ export default function InicioEstudiantes() {
 
         // Apply career filter
         if (carreraFilter) {
-            result = result.filter(materia =>
-                materia.clave_carrera === carreraFilter.clave
-            );
+            result = result.filter(materia => materia.clave_carrera === carreraFilter.clave);
         }
 
         // Apply building filter
         if (edificioFilter && edificioFilter.value) {
-            result = result.filter(materia =>
-                materia.edificio === edificioFilter.value
-            );
+            result = result.filter(materia => materia.edificio === edificioFilter.value);
         }
 
         // Apply credits filter
@@ -118,9 +116,7 @@ export default function InicioEstudiantes() {
                 }
 
                 // Convert materia.creditos to number if it's a string
-                const materiaCreditos = typeof materia.creditos === 'string'
-                    ? parseInt(materia.creditos)
-                    : materia.creditos;
+                const materiaCreditos = typeof materia.creditos === 'string' ? parseInt(materia.creditos) : materia.creditos;
 
                 console.log(`Comparing materia ${materia.nombre_materia} credits:`, materiaCreditos, '===', creditsValue);
 
@@ -131,11 +127,7 @@ export default function InicioEstudiantes() {
         // Apply search term filter
         if (searchTerm) {
             const term = searchTerm.toLowerCase();
-            result = result.filter(materia =>
-                materia.nombre_materia?.toLowerCase().includes(term) ||
-                materia.docente?.toLowerCase().includes(term) ||
-                materia.clave_materia?.toLowerCase().includes(term)
-            );
+            result = result.filter(materia => materia.nombre_materia?.toLowerCase().includes(term) || materia.docente?.toLowerCase().includes(term) || materia.clave_materia?.toLowerCase().includes(term));
         }
 
         setFilteredMaterias(result);
@@ -165,8 +157,7 @@ export default function InicioEstudiantes() {
         setFilterApplied(false);
     };
 
-    return (
-        <div>
+    return (<div>
             {/* Modal */}
             <dialog id="my_modal_1" className="modal">
                 <div className="modal-box bg-white rounded-lg shadow-lg p-6 w-full max-w-md mx-auto">
@@ -194,7 +185,7 @@ export default function InicioEstudiantes() {
             <div className="flex items-center flex-col">
                 <Toggle/>
 
-                <SearchBox onSearch={handleSearch} value={searchTerm} />
+                <SearchBox onSearch={handleSearch} value={searchTerm}/>
 
                 <div className="flex justify-between mb-3 w-full px-4">
                     <p className="text-lg font-bold">{filteredMaterias.length} resultados</p>
@@ -222,19 +213,16 @@ export default function InicioEstudiantes() {
                             buttonIcon={PiDotsThreeFill}
                             selectedItem={creditosFilter}
                         />
-                        {(carreraFilter || edificioFilter || creditosFilter || searchTerm) && (
-                            <button
+                        {(carreraFilter || edificioFilter || creditosFilter || searchTerm) && (<button
                                 onClick={clearFilters}
                                 className="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-300"
                             >
                                 Limpiar filtros
-                            </button>
-                        )}
+                            </button>)}
                     </div>
                 </div>
             </div>
 
-            <MateriasGrid materias={filteredMaterias}/>
-        </div>
-    );
+            {loading ? (<LoadingSpinner/>) : <MateriasGrid materias={filteredMaterias}/>}
+        </div>);
 }

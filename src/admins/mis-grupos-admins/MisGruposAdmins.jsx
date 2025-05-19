@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import MateriasGrid from './../../components/global/MateriasGrid.jsx';
 import axios from "axios";
 import { FaBookOpen } from "react-icons/fa";
+import LoadingSpinner from "../../components/LoadingSpinner.jsx";
 
 export default function MisGrupos() {
     const token = localStorage.getItem('authToken');
@@ -174,8 +175,7 @@ export default function MisGrupos() {
 
             {loading ? (
                 <div className="flex justify-center items-center py-20">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-                </div>
+                    <LoadingSpinner/>                </div>
             ) : error && error !== 'No estas inscrito en esta materia' ? (
                 <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
                     <p>{error}</p>

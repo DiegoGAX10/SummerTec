@@ -3,6 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from 'react-router-dom';
 import Constants from "../../utils/constants/Constants.jsx";
+import LoadingSpinner from "../../components/LoadingSpinner.jsx";
 
 export default function SolicitarGrupo() {
     const token = localStorage.getItem('authToken');
@@ -27,6 +28,10 @@ export default function SolicitarGrupo() {
 
     const navigate = useNavigate();
     const baseurl = import.meta.env.VITE_BASE_URL;
+// Loading state
+    const [loading, setLoading] = useState(false); // Set to false initially
+
+
 
     // Obtener materias por clave de carrera
     async function getMateriasByClave() {
@@ -128,6 +133,7 @@ export default function SolicitarGrupo() {
         console.log("Datos a enviar:", JSON.stringify(data, null, 2));
 
         try {
+            setLoading(true);
             const response = await fetch(`${baseurl}/materias_propuestas/create_materia_propuesta`, {
                 method: "POST",
                 headers: {
@@ -158,6 +164,8 @@ export default function SolicitarGrupo() {
                 text: error.message || String(error),
                 icon: "error",
             });
+        }finally {
+            setLoading(false); // Hide spinner once the request finishes
         }
     }
 
@@ -323,10 +331,11 @@ export default function SolicitarGrupo() {
                         </div>
                     )}
 
-                    <button type="submit"
-                            className="w-full bg-indigo-500 text-white p-2 rounded-lg hover:bg-indigo-600 transition mt-4">
+                    {
+                      loading?<LoadingSpinner/> : (<button type="submit"
+                             className="w-full bg-indigo-500 text-white p-2 rounded-lg hover:bg-indigo-600 transition mt-4">
                         Solicitar grupo
-                    </button>
+                    </button>)}
                 </form>
             </div>
         </div>

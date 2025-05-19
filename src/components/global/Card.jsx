@@ -5,6 +5,7 @@ import { MdGroupAdd } from "react-icons/md";
 import Swal from "sweetalert2";
 import Constants from "../../utils/constants/Constants.jsx";
 import axios from "axios";
+import LoadingSpinner from "../LoadingSpinner.jsx";
 
 function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo, estado, id_materia, esMiGrupo = false, onBaja }) {
 
@@ -19,6 +20,10 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
     const [isEditable, setIsEditable] = useState(false);
     const [canEdit, setCanEdit] = useState(false);
     const [inscritosCount, setInscritosCount] = useState(0);
+
+
+    const [loading, setLoading] = useState(false); // Set to false initially
+
 
     // Edited form values
     const [formValues, setFormValues] = useState({
@@ -409,6 +414,7 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
     // Se inscribe el estudiante
     const handleInscribir = async (id_materia) => {
         try {
+            setLoading(true);
             // Obtener el token y el email del estudiante
             const token = localStorage.getItem('authToken');
             const estudianteEmail = localStorage.getItem('userEmail');
@@ -506,6 +512,8 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
                 text: mensajeError,
                 icon: "error",
             });
+        }finally {
+            setLoading(false); // Hide spinner once the request finishes
         }
     };
 
@@ -647,13 +655,14 @@ function Card({ nombre, aula, horas_semanales, creditos, horario, profesor, cupo
         } else {
             return (
                 <div className="flex justify-center">
-                    <button
+                    {loading? (   <LoadingSpinner />):
+                        (<button
                         type="button"
                         className="flex items-center gap-2 text-white bg-[var(--primary-color)] hover:bg-[#163560] font-medium rounded-lg text-sm px-4 py-2.5"
                         onClick={() => handleInscribir(id_materia)}
                     >
                         Solicitar unirme
-                    </button>
+                    </button>)}
                 </div>
             );
         }
